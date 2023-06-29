@@ -1,57 +1,56 @@
 /*==============================================================================
 
-  Marlin Firmware
+  Firmware de Marlin
 
   (c) 2011-2020 MarlinFirmware
-  Portions of Marlin are (c) by their respective authors.
-  All code complies with GPLv2 and/or GPLv3
+  Partes de Marlin son (c) por sus respectivos autores.
+  Todo el código cumple con la licencia GPLv2 y/o GPLv3
 
 ================================================================================
 
-Greetings! Thank you for choosing Marlin 2 as your 3D printer firmware.
+¡Saludos! Gracias por elegir Marlin 2 como firmware para tu impresora 3D.
 
-To configure Marlin you must edit Configuration.h and Configuration_adv.h
-located in the root 'Marlin' folder. Check our Configurations repository to
-see if there's a more suitable starting-point for your specific hardware.
+Para configurar Marlin, debes editar Configuration.h y Configuration_adv.h
+ubicados en la carpeta raíz de 'Marlin'. Revisa nuestro repositorio de Configuraciones
+para ver si hay un punto de partida más adecuado para tu hardware específico.
 
-Before diving in, we recommend the following essential links:
+Antes de comenzar, te recomendamos los siguientes enlaces esenciales:
 
-Marlin Firmware Official Website
+Sitio web oficial de Marlin Firmware
 
   - https://marlinfw.org/
-    The official Marlin Firmware website contains the most up-to-date
-    documentation. Contributions are always welcome!
+    El sitio web oficial de Marlin Firmware contiene la documentación más actualizada.
+    ¡Las contribuciones siempre son bienvenidas!
 
-Configuration
+Configuración
 
   - https://github.com/MarlinFirmware/Configurations
-    Example configurations for several printer models.
+    Ejemplos de configuraciones para varios modelos de impresoras.
 
   - https://youtu.be/3gwWVFtdg-4
-    A good 20-minute overview of Marlin configuration by Tom Sanladerer.
-    (Applies to Marlin 1.0.x, so Jerk and Acceleration should be halved.)
-    Also... https://www.google.com/search?tbs=vid%3A1&q=configure+marlin
+    Un buen resumen de 20 minutos sobre la configuración de Marlin realizado por Tom Sanladerer.
+    (Aplica a Marlin 1.0.x, por lo que la velocidad de Jerk y la aceleración deben reducirse a la mitad).
+    También... https://www.google.com/search?tbs=vid%3A1&q=configure+marlin
 
   - https://marlinfw.org/docs/configuration/configuration.html
-    Marlin's configuration options are explained in more detail here.
+    Aquí se explican con más detalle las opciones de configuración de Marlin.
 
-Getting Help
+Obtener ayuda
 
   - https://reprap.org/forum/list.php?415
-    The Marlin Discussion Forum is a great place to get help from other Marlin
-    users who may have experienced similar issues to your own.
+    El Foro de Discusión de Marlin es un excelente lugar para obtener ayuda de otros usuarios de Marlin
+    que pueden haber experimentado problemas similares a los tuyos.
 
   - https://github.com/MarlinFirmware/Marlin/issues
-    With a free GitHub account you can provide us with feedback, bug reports,
-    and feature requests via the Marlin Issue Queue.
+    Con una cuenta gratuita de GitHub, puedes proporcionarnos comentarios, informes de errores
+    y solicitudes de funciones a través de la cola de problemas de Marlin.
 
-Contributing
+Contribuir
 
   - https://marlinfw.org/docs/development/contributing.html
-    If you'd like to contribute to Marlin, read this first!
+    ¡Si deseas contribuir a Marlin, lee esto primero!
 
   - https://marlinfw.org/docs/development/coding_standards.html
-    Before submitting code get to know the Coding Standards.
-
+    Antes de enviar código, familiarízate con los Estándares de Codificación.
 
 ------------------------------------------------------------------------------*/
