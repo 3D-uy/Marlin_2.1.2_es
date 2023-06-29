@@ -1,6 +1,6 @@
 #
 # clean-closed.yml
-# Remove obsolete labels when an Issue or PR is closed
+# Elimina las etiquetas obsoletas cuando se cierra un problema o una solicitud de extracción
 #
 
 name: Clean Closed

@@ -91,7 +91,7 @@ namespace Anycubic {
       if (filelist.seek(_seek)) {
         //sendFile();
 
-        DgusTFT::sendTxtToTFT(filelist.longFilename(), TXT_FILE_0 + file_num*0x30);
+        DgusTFT::SendTxtToTFT(filelist.longFilename(), TXT_FILE_0 + file_num*0x30);
 
         #if ACDEBUG(AC_FILE)
           SERIAL_ECHOLNPGM("seek: ", _seek, " '", filelist.longFilename(), "' '", currentDirPath, "", filelist.shortFilename(), "'\n");
@@ -102,7 +102,7 @@ namespace Anycubic {
           SERIAL_ECHOLNPGM("over seek: ", _seek);
         #endif
 
-        DgusTFT::sendTxtToTFT("\0", TXT_FILE_0 + file_num*0x30);
+        DgusTFT::SendTxtToTFT("\0", TXT_FILE_0 + file_num*0x30);
       }
 
       file_num++;
@@ -115,7 +115,7 @@ namespace Anycubic {
     // Permitted special characters in file name: -_*#~
     // Panel can display 22 characters per line.
     if (!filelist.isDir())
-      DgusTFT::sendTxtToTFT(filelist.longFilename(), TXT_FILE_0);
+      DgusTFT::SendTxtToTFT(filelist.longFilename(), TXT_FILE_0);
   }
 
   void FileNavigator::changeDIR(char *folder) {

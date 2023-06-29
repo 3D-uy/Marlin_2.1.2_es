@@ -31,10 +31,10 @@
 #endif
 
 // ADC
-#ifdef BOARD_ADC_VREF_MV
-  #define ADC_VREF_MV BOARD_ADC_VREF_MV
+#ifdef BOARD_ADC_VREF
+  #define ADC_VREF BOARD_ADC_VREF
 #else
-  #define ADC_VREF_MV HAL_ADC_VREF_MV
+  #define ADC_VREF HAL_ADC_VREF
 #endif
 
 // Linear advance uses Jerk since E is an isolated axis
@@ -1814,9 +1814,6 @@
 #endif
 #if ANY_AXIS_HAS(SW_SERIAL)
   #define HAS_TMC_SW_SERIAL 1
-#endif
-#ifndef SERIAL_FLOAT_PRECISION
-  #define SERIAL_FLOAT_PRECISION 2
 #endif
 
 #if DISABLED(SENSORLESS_HOMING)

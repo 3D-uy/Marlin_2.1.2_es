@@ -31,4 +31,4 @@
 void Preview_DrawFromSD();
 void Preview_Invalidate();
 bool Preview_Valid();
-void Preview_Show();
+void Preview_Reset();

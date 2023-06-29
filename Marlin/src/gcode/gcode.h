@@ -711,13 +711,6 @@ private:
   #endif
 
   static void M85();
-
-  #if ENABLED(HOTEND_IDLE_TIMEOUT)
-    static void M86();
-    static void M86_report(const bool forReplay=true);
-    static void M87();
-  #endif
-
   static void M92();
   static void M92_report(const bool forReplay=true, const int8_t e=-1);
 
@@ -727,6 +720,7 @@ private:
 
   #if ENABLED(BD_SENSOR)
     static void M102();
+    static void M102_report(const bool forReplay=true);
   #endif
 
   #if HAS_HOTEND

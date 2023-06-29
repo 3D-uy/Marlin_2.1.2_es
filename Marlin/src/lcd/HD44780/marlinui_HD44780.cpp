@@ -731,7 +731,7 @@ void MarlinUI::draw_status_message(const bool blink) {
     static bool last_blink = false;
 
     // Get the UTF8 character count of the string
-    uint8_t slen = status_message.glyphs();
+    uint8_t slen = utf8_strlen(status_message);
 
     // If the string fits into the LCD, just print it and do not scroll it
     if (slen <= LCD_WIDTH) {
@@ -773,7 +773,7 @@ void MarlinUI::draw_status_message(const bool blink) {
     UNUSED(blink);
 
     // Get the UTF8 character count of the string
-    uint8_t slen = status_message.glyphs();
+    uint8_t slen = utf8_strlen(status_message);
 
     // Just print the string to the LCD
     lcd_put_u8str_max(status_message, LCD_WIDTH);
@@ -787,10 +787,9 @@ void MarlinUI::draw_status_message(const bool blink) {
   #define TPOFFSET (LCD_WIDTH - 1)
   static uint8_t timepos = TPOFFSET - 6;
   static char buffer[8];
+  static lcd_uint_t pc, pr;
 
   #if ENABLED(SHOW_PROGRESS_PERCENT)
-    static lcd_uint_t pc = 0, pr = 2;
-    inline void setPercentPos(const lcd_uint_t c, const lcd_uint_t r) { pc = c; pr = r; }
     void MarlinUI::drawPercent() {
       const uint8_t progress = ui.get_progress_percent();
       if (progress) {
@@ -801,7 +800,6 @@ void MarlinUI::draw_status_message(const bool blink) {
       }
     }
   #endif
-
   #if ENABLED(SHOW_REMAINING_TIME)
     void MarlinUI::drawRemain() {
       if (printJobOngoing()) {
@@ -813,7 +811,6 @@ void MarlinUI::draw_status_message(const bool blink) {
       }
     }
   #endif
-
   #if ENABLED(SHOW_INTERACTION_TIME)
     void MarlinUI::drawInter() {
       const duration_t interactt = ui.interaction_time;
@@ -825,7 +822,6 @@ void MarlinUI::draw_status_message(const bool blink) {
       }
     }
   #endif
-
   #if ENABLED(SHOW_ELAPSED_TIME)
     void MarlinUI::drawElapsed() {
       if (printJobOngoing()) {
@@ -951,7 +947,7 @@ void MarlinUI::draw_status_screen() {
       #if LCD_WIDTH < 20
 
         #if HAS_PRINT_PROGRESS
-          TERN_(SHOW_PROGRESS_PERCENT, setPercentPos(0, 2));
+          pc = 0; pr = 2;
           rotate_progress();
         #endif
 
@@ -1043,7 +1039,7 @@ void MarlinUI::draw_status_screen() {
       #if LCD_WIDTH >= 20
 
         #if HAS_PRINT_PROGRESS
-          TERN_(SHOW_PROGRESS_PERCENT, setPercentPos(6, 2));
+          pc = 6; pr = 2;
           rotate_progress();
         #else
           char c;
@@ -1126,7 +1122,7 @@ void MarlinUI::draw_status_screen() {
       _draw_bed_status(blink);
     #elif HAS_PRINT_PROGRESS
       #define DREW_PRINT_PROGRESS 1
-      TERN_(SHOW_PROGRESS_PERCENT, setPercentPos(0, 2));
+      pc = 0; pr = 2;
       rotate_progress();
     #endif
 
@@ -1134,7 +1130,7 @@ void MarlinUI::draw_status_screen() {
     // All progress strings
     //
     #if HAS_PRINT_PROGRESS && !DREW_PRINT_PROGRESS
-      TERN_(SHOW_PROGRESS_PERCENT, setPercentPos(LCD_WIDTH - 9, 2));
+      pc = LCD_WIDTH - 9; pr = 2;
       rotate_progress();
     #endif
   #endif // LCD_INFO_SCREEN_STYLE 1

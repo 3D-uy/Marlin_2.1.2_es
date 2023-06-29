@@ -1,6 +1,6 @@
 #
 # test-builds.yml
-# Do test builds to catch compile errors
+# Realiza compilaciones de prueba para detectar errores de compilación
 #
 
 name: CI
@@ -25,7 +25,7 @@ on:
 
 jobs:
   test_builds:
-    name: Run All Tests
+    name: Ejecutar Todas las Pruebas
     if: github.repository == 'MarlinFirmware/Marlin'
 
     runs-on: ubuntu-latest
@@ -34,7 +34,7 @@ jobs:
       matrix:
         test-platform:
 
-        # Native
+        # Nativo
         - linux_native
 
         # AVR
@@ -42,7 +42,7 @@ jobs:
         - mega1280
         - at90usb1286_dfu
 
-        # AVR Extended
+        # AVR Extendido
         - FYSETC_F6
         - melzi_optiboot
         - rambo
@@ -133,16 +133,16 @@ jobs:
         #- STM32F103RC_btt_maple
         #- STM32F103RE_creality_maple
 
-        # LPC176x - Lengthy tests
+        # LPC176x - Pruebas largas
         - LPC1768
         - LPC1769
 
     steps:
 
-    - name: Check out the PR
+    - name: Revisar la PR
       uses: actions/checkout@v3
 
-    - name: Cache pip
+    - name: Caché de pip
       uses: actions/cache@v3
       with:
         path: ~/.cache/pip
@@ -150,24 +150,24 @@ jobs:
         restore-keys: |
           ${{ runner.os }}-pip-
 
-    - name: Cache PlatformIO
+    - name: Caché de PlatformIO
       uses: actions/cache@v3
       with:
         path: ~/.platformio
         key: ${{ runner.os }}-${{ hashFiles('**/lockfiles') }}
 
-    - name: Select Python 3.7
+    - name: Seleccionar Python 3.7
       uses: actions/setup-python@v3
       with:
-        python-version: '3.7' # Version range or exact version of a Python version to use, using semvers version range syntax.
-        architecture: 'x64' # optional x64 or x86. Defaults to x64 if not specified
+        python-version: '3.7' # Rango de versiones o versión exacta de Python a utilizar, usando la sintaxis de rangos de versiones semver.
+        architecture: 'x64' # opcional x64 o x86. Por defecto, x64 si no se especifica
 
-    - name: Install PlatformIO
+    - name: Instalar PlatformIO
       run: |
         pip install -U platformio
         pio upgrade --dev
         pio pkg update --global
 
-    - name: Run ${{ matrix.test-platform }} Tests
+    - name: Ejecutar Pruebas de ${{ matrix.test-platform }}
       run: |
         make tests-single-ci TEST_TARGET=${{ matrix.test-platform }}

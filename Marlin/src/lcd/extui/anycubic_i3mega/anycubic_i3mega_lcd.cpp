@@ -24,7 +24,7 @@
 #if ENABLED(ANYCUBIC_LCD_I3MEGA)
 
 //#define ANYCUBIC_LCD_DEBUG
-#define DEBUG_OUT ENABLED(ANYCUBIC_LCD_DEBUG)
+#define DEBUG_OUT ANYCUBIC_LCD_DEBUG
 #include "../../../core/debug_out.h"
 
 #include "anycubic_i3mega_lcd.h"
@@ -51,19 +51,20 @@
 #define SPECIAL_MENU_FILENAME(A) A TERN_(ANYCUBIC_LCD_GCODE_EXT, ".gcode")
 #define SPECIAL_MENU_ALTNAME(A, B) TERN(ANYCUBIC_LCD_GCODE_EXT, A ".gcode", B)
 
-AnycubicTFT anycubicTFT;
+AnycubicTFTClass anycubicTFT;
 
-char AnycubicTFT::tftCommands[TFTBUFSIZE][TFT_MAX_CMD_SIZE];
-int AnycubicTFT::tftBufLen = 0,
-    AnycubicTFT::tftBufIndR = 0,
-    AnycubicTFT::tftBufIndW = 0;
-char* AnycubicTFT::tftStrchrPtr;
-uint8_t AnycubicTFT::specialMenu = false;
-AnycubicMediaPrintState AnycubicTFT::mediaPrintingState = AMPRINTSTATE_NOT_PRINTING;
-AnycubicMediaPauseState AnycubicTFT::mediaPauseState = AMPAUSESTATE_NOT_PAUSED;
+char AnycubicTFTClass::tftCommands[TFTBUFSIZE][TFT_MAX_CMD_SIZE];
+int AnycubicTFTClass::tftBufLen = 0,
+    AnycubicTFTClass::tftBufIndR = 0,
+    AnycubicTFTClass::tftBufIndW = 0;
+char AnycubicTFTClass::serial3_char;
+char* AnycubicTFTClass::tftStrchrPtr;
+uint8_t AnycubicTFTClass::specialMenu = false;
+AnycubicMediaPrintState AnycubicTFTClass::mediaPrintingState = AMPRINTSTATE_NOT_PRINTING;
+AnycubicMediaPauseState AnycubicTFTClass::mediaPauseState = AMPAUSESTATE_NOT_PAUSED;
 
-char AnycubicTFT::selectedDirectory[30];
-char AnycubicTFT::selectedFile[FILENAME_LENGTH];
+char AnycubicTFTClass::selectedDirectory[30];
+char AnycubicTFTClass::selectedFile[FILENAME_LENGTH];
 
 // Serial helpers
 static void sendNewLine() { LCD_SERIAL.write('\r'); LCD_SERIAL.write('\n'); }
@@ -77,9 +78,9 @@ static void sendLine_P(PGM_P str) { send_P(str); sendNewLine(); }
 
 using namespace ExtUI;
 
-AnycubicTFT::AnycubicTFT() {}
+AnycubicTFTClass::AnycubicTFTClass() {}
 
-void AnycubicTFT::onSetup() {
+void AnycubicTFTClass::onSetup() {
   #ifndef LCD_BAUDRATE
     #define LCD_BAUDRATE 115200
   #endif
@@ -109,7 +110,7 @@ void AnycubicTFT::onSetup() {
   DEBUG_ECHOLNPGM("TFT Serial Debug: Finished startup");
 }
 
-void AnycubicTFT::onCommandScan() {
+void AnycubicTFTClass::onCommandScan() {
   static millis_t nextStopCheck = 0; // used to slow the stopped print check down to reasonable times
   const millis_t ms = millis();
   if (ELAPSED(ms, nextStopCheck)) {
@@ -134,26 +135,26 @@ void AnycubicTFT::onCommandScan() {
   }
 }
 
-void AnycubicTFT::onKillTFT() {
+void AnycubicTFTClass::onKillTFT() {
   SENDLINE_DBG_PGM("J11", "TFT Serial Debug: Kill command... J11");
 }
 
-void AnycubicTFT::onSDCardStateChange(bool isInserted) {
+void AnycubicTFTClass::onSDCardStateChange(bool isInserted) {
   DEBUG_ECHOLNPGM("TFT Serial Debug: onSDCardStateChange event triggered...", isInserted);
   doSDCardStateCheck();
 }
 
-void AnycubicTFT::onSDCardError() {
+void AnycubicTFTClass::onSDCardError() {
   DEBUG_ECHOLNPGM("TFT Serial Debug: onSDCardError event triggered...");
   SENDLINE_DBG_PGM("J21", "TFT Serial Debug: On SD Card Error ... J21");
 }
 
-void AnycubicTFT::onFilamentRunout() {
+void AnycubicTFTClass::onFilamentRunout() {
   DEBUG_ECHOLNPGM("TFT Serial Debug: onFilamentRunout triggered...");
   doFilamentRunoutCheck();
 }
 
-void AnycubicTFT::onUserConfirmRequired(const char * const msg) {
+void AnycubicTFTClass::onUserConfirmRequired(const char * const msg) {
   DEBUG_ECHOLNPGM("TFT Serial Debug: onUserConfirmRequired triggered... ", msg);
 
   #if HAS_MEDIA
@@ -205,23 +206,23 @@ void AnycubicTFT::onUserConfirmRequired(const char * const msg) {
   #endif
 }
 
-float AnycubicTFT::codeValue() {
+float AnycubicTFTClass::codeValue() {
   return (strtod(&tftCommands[tftBufIndR][tftStrchrPtr - tftCommands[tftBufIndR] + 1], nullptr));
 }
 
-bool AnycubicTFT::codeSeen(char code) {
+bool AnycubicTFTClass::codeSeen(char code) {
   tftStrchrPtr = strchr(tftCommands[tftBufIndR], code);
   return !!tftStrchrPtr; // Return True if a character was found
 }
 
-bool AnycubicTFT::isNozzleHomed() {
+bool AnycubicTFTClass::isNozzleHomed() {
   const float xPosition = getAxisPosition_mm((axis_t) X);
   const float yPosition = getAxisPosition_mm((axis_t) Y);
   return WITHIN(xPosition, X_MIN_POS - 0.1, X_MIN_POS + 0.1) &&
          WITHIN(yPosition, Y_MIN_POS - 0.1, Y_MIN_POS + 0.1);
 }
 
-void AnycubicTFT::handleSpecialMenu() {
+void AnycubicTFTClass::handleSpecialMenu() {
   /**
    * NOTE: that the file selection command actual lowercases the entire selected file/foldername, so charracter comparisons need to be lowercase.
    */
@@ -354,7 +355,7 @@ void AnycubicTFT::handleSpecialMenu() {
 
 }
 
-void AnycubicTFT::renderCurrentFileList() {
+void AnycubicTFTClass::renderCurrentFileList() {
   #if HAS_MEDIA
     uint16_t selectedNumber = 0;
     selectedDirectory[0] = 0;
@@ -382,7 +383,7 @@ void AnycubicTFT::renderCurrentFileList() {
   #endif // HAS_MEDIA
 }
 
-void AnycubicTFT::renderSpecialMenu(uint16_t selectedNumber) {
+void AnycubicTFTClass::renderSpecialMenu(uint16_t selectedNumber) {
 
   switch (selectedNumber) {
     default: break;
@@ -449,7 +450,7 @@ void AnycubicTFT::renderSpecialMenu(uint16_t selectedNumber) {
   }
 }
 
-void AnycubicTFT::renderCurrentFolder(uint16_t selectedNumber) {
+void AnycubicTFTClass::renderCurrentFolder(uint16_t selectedNumber) {
   FileList currentFileList;
   const uint16_t dir_files = currentFileList.count(),
                  max_files = (dir_files - selectedNumber) < 4 ? dir_files : selectedNumber + 3;
@@ -484,14 +485,14 @@ void AnycubicTFT::renderCurrentFolder(uint16_t selectedNumber) {
   }
 }
 
-void AnycubicTFT::onPrintTimerStarted() {
+void AnycubicTFTClass::onPrintTimerStarted() {
   #if HAS_MEDIA
     if (mediaPrintingState == AMPRINTSTATE_PRINTING)
       SENDLINE_DBG_PGM("J04", "TFT Serial Debug: Starting SD Print... J04"); // J04 Starting Print
   #endif
 }
 
-void AnycubicTFT::onPrintTimerPaused() {
+void AnycubicTFTClass::onPrintTimerPaused() {
   #if HAS_MEDIA
     if (isPrintingFromMedia()) {
       mediaPrintingState = AMPRINTSTATE_PAUSED;
@@ -500,7 +501,7 @@ void AnycubicTFT::onPrintTimerPaused() {
   #endif
 }
 
-void AnycubicTFT::onPrintTimerStopped() {
+void AnycubicTFTClass::onPrintTimerStopped() {
   #if HAS_MEDIA
     if (mediaPrintingState == AMPRINTSTATE_PRINTING) {
       mediaPrintingState = AMPRINTSTATE_NOT_PRINTING;
@@ -513,7 +514,7 @@ void AnycubicTFT::onPrintTimerStopped() {
 
 #define ROUND(val) int((val)+0.5f)
 
-void AnycubicTFT::getCommandFromTFT() {
+void AnycubicTFTClass::getCommandFromTFT() {
   static int serial_count = 0;
 
   char *starpos = nullptr;
@@ -883,7 +884,7 @@ void AnycubicTFT::getCommandFromTFT() {
   } // while
 }
 
-void AnycubicTFT::doSDCardStateCheck() {
+void AnycubicTFTClass::doSDCardStateCheck() {
   #if ALL(HAS_MEDIA, HAS_SD_DETECT)
     bool isInserted = isMediaInserted();
     if (isInserted)
@@ -894,7 +895,7 @@ void AnycubicTFT::doSDCardStateCheck() {
   #endif
 }
 
-void AnycubicTFT::doFilamentRunoutCheck() {
+void AnycubicTFTClass::doFilamentRunoutCheck() {
   #if ENABLED(FILAMENT_RUNOUT_SENSOR)
     // NOTE: getFilamentRunoutState() only returns the runout state if the job is printing
     // we want to actually check the status of the pin here, regardless of printstate
@@ -913,7 +914,7 @@ void AnycubicTFT::doFilamentRunoutCheck() {
   #endif // FILAMENT_RUNOUT_SENSOR
 }
 
-void AnycubicTFT::startPrint() {
+void AnycubicTFTClass::startPrint() {
   #if HAS_MEDIA
     if (!isPrinting() && strlen(selectedFile) > 0) {
       DEBUG_ECHOLNPGM("TFT Serial Debug: About to print file ... ", isPrinting(), " ", selectedFile);
@@ -924,7 +925,7 @@ void AnycubicTFT::startPrint() {
   #endif // SDUPPORT
 }
 
-void AnycubicTFT::pausePrint() {
+void AnycubicTFTClass::pausePrint() {
   #if HAS_MEDIA
     if (isPrintingFromMedia() && mediaPrintingState != AMPRINTSTATE_STOP_REQUESTED && mediaPauseState == AMPAUSESTATE_NOT_PAUSED) {
       mediaPrintingState = AMPRINTSTATE_PAUSE_REQUESTED;
@@ -938,7 +939,7 @@ void AnycubicTFT::pausePrint() {
   #endif
 }
 
-void AnycubicTFT::resumePrint() {
+void AnycubicTFTClass::resumePrint() {
   #if HAS_MEDIA
     #if ENABLED(FILAMENT_RUNOUT_SENSOR)
       if (READ(FIL_RUNOUT1_PIN)) {
@@ -972,7 +973,7 @@ void AnycubicTFT::resumePrint() {
   #endif
 }
 
-void AnycubicTFT::stopPrint() {
+void AnycubicTFTClass::stopPrint() {
   #if HAS_MEDIA
     mediaPrintingState = AMPRINTSTATE_STOP_REQUESTED;
     mediaPauseState    = AMPAUSESTATE_NOT_PAUSED;

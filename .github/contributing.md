@@ -1,146 +1,148 @@
-# Contributing to Marlin
+# Contribuyendo a Marlin
 
-Thanks for your interest in contributing to Marlin Firmware!
+¡Gracias por tu interés en contribuir a Marlin Firmware!
 
-The following is a set of guidelines for contributing to Marlin, hosted by the [MarlinFirmware Organization](https://github.com/MarlinFirmware) on GitHub. These are mostly guidelines, not rules. Use your best judgment, and feel free to propose changes to this document in a Pull Request.
+Lo siguiente es un conjunto de pautas para contribuir a Marlin, alojado por la [Organización MarlinFirmware](https://github.com/MarlinFirmware) en GitHub. Estas son principalmente pautas, no reglas. Usa tu mejor criterio y siéntete libre de proponer cambios a este documento a través de una solicitud de extracción (Pull Request).
 
-#### Table Of Contents
+#### Tabla de Contenidos
 
-[Code of Conduct](#code-of-conduct)
+[Código de Conducta](#código-de-conducta)
 
-[I don't want to read this whole thing, I just have a question!!!](#i-dont-want-to-read-this-whole-thing-i-just-have-a-question)
+[¡No quiero leer todo esto, solo tengo una pregunta!!!](#no-quiero-leer-todo-esto-solo-tengo-una-pregunta)
 
-[How Can I Contribute?](#how-can-i-contribute)
-  * [Reporting Bugs](#reporting-bugs)
-  * [Suggesting Features or Changes](#suggesting-features-or-changes)
-  * [Your First Code Contribution](#your-first-code-contribution)
-  * [Pull Requests](#pull-requests)
+[¿Cómo puedo contribuir?](#cómo-puedo-contribuir)
+  * [Reportar Errores](#reportar-errores)
+  * [Sugerir Funcionalidades o Cambios](#sugerir-funcionalidades-o-cambios)
+  * [Tu Primera Contribución de Código](#tu-primera-contribución-de-código)
+  * [Solicitudes de Extracción (Pull Requests)](#solicitudes-de-extracción-pull-requests)
 
-[Styleguides](#styleguides)
-  * [Git Commit Messages](#git-commit-messages)
-  * [C++ Coding Standards](#c++-coding-standards)
-  * [Documentation Styleguide](#documentation)
+[Guías de Estilo](#guías-de-estilo)
+  * [Mensajes de Confirmación en Git](#mensajes-de-confirmación-en-git)
+  * [Estándares de Codificación en C++](#estándares-de-codificación-en-c++)
+  * [Guía de Estilo de Documentación](#documentación)
 
-[Additional Notes](#additional-notes)
-  * [Issue and Pull Request Labels](#issue-and-pull-request-labels)
+[Notas Adicionales](#notas-adicionales)
+  * [Etiquetas de Problemas y Solicitudes de Extracción (Pull Requests)](#etiquetas-de-problemas-y-solicitudes-de-extracción-pull-requests)
 
-## Code of Conduct
+## Código de Conducta
 
-This project and everyone participating in it is governed by the [Marlin Code of Conduct](code_of_conduct.md). By participating, you are expected to uphold this code. Please report unacceptable behavior to [marlinfirmware@github.com](mailto:marlinfirmware@github.com).
+Este proyecto y todos los participantes en él están sujetos al [Código de Conducta de Marlin](code_of_conduct.md). Al participar, se espera que cumplas con este código. Por favor, reporta cualquier comportamiento inaceptable a [marlinfirmware@github.com](mailto:marlinfirmware@github.com).
 
-## I don't want to read this whole thing I just have a question!!!
+## ¡No quiero leer todo esto, solo tengo una pregunta!!!
 
-> **Note:** Please don't file an issue to ask a question. You'll get faster results by using the resources below.
+> **Nota:** Por favor, no abras un problema solo para hacer una pregunta. Obtendrás resultados más rápidos utilizando los recursos a continuación.
 
-We have a Message Board and a Facebook group where our knowledgable user community can provide helpful advice if you have questions.
+Tenemos un Tablón de Mensajes y un grupo de Facebook donde nuestra comunidad de usuarios expertos puede brindar consejos útiles si tienes preguntas.
 
-- [Marlin Documentation](https://marlinfw.org) - Official Marlin documentation
-- Facebook Group ["Marlin Firmware"](https://www.facebook.com/groups/1049718498464482/)
-- RepRap.org [Marlin Forum](https://forums.reprap.org/list.php?415)
-- Facebook Group ["Marlin Firmware for 3D Printers"](https://www.facebook.com/groups/3Dtechtalk/)
-- [Marlin Configuration](https://www.youtube.com/results?search_query=marlin+configuration) on YouTube
+- [Documentación de Marlin](https://marlinfw.org) - Documentación oficial de Marlin
+- Grupo de Facebook ["Marlin Firmware"](https://www.facebook.com/groups/1049718498464482/)
+- Foro [Marlin en RepRap.org](https://forums.reprap.org/list.php?415)
+- Grupo de Facebook ["Marlin Firmware for 3D Printers"](https://www.facebook.com/groups/3Dtechtalk/)
+- [Configuración de Marlin](https://www.youtube.com/results?search_query=marlin+configuration) en YouTube
 
-If chat is more your speed, you can join the MarlinFirmware Discord server:
+Si prefieres el chat, puedes unirte al servidor de Discord de MarlinFirmware:
 
-* Use the link https://discord.gg/n5NJ59y to join up as a General User.
-* Even though our Discord is pretty active, it may take a while for community members to respond &mdash; please be patient!
-* Use the `#general` channel for general questions or discussion about Marlin.
-* Other channels exist for certain topics or are limited to Patrons. Check the channel list.
+* Usa el enlace https://discord.gg/n5NJ59y para unirte como Usuario General.
+* Aunque nuestro Discord es bastante activo, puede llevar tiempo obtener respuestas de los miembros de la comunidad, ¡ten paciencia!
+* Utiliza el canal `#general` para preguntas generales o discusiones sobre Marlin.
+* Hay otros canales para temas específicos o limitados a Patrocinadores. Revisa la lista de canales.
 
-## How Can I Contribute?
+## ¿Cómo puedo contribuir?
 
-### Reporting Bugs
+### Reportar Errores
 
-This section guides you through submitting a Bug Report for Marlin. Following these guidelines helps maintainers and the community understand your report, reproduce the behavior, and find related reports.
+Esta sección te guiará en cómo enviar un informe de error (Bug Report) para Marlin. Seguir estas pautas ayuda a los mantenedores y a la comunidad a entender tu informe, reproducir el comportamiento y encontrar informes relacionados.
 
-Before creating a Bug Report, please test the "nightly" development branch, as you might find out that you don't need to create one. When you are creating a Bug Report, please [include as many details as possible](#how-do-i-submit-a-good-bug-report). Fill out [the required template](ISSUE_TEMPLATE/bug_report.yml), the information it asks for helps us resolve issues faster.
+Antes de crear un informe de error, por favor prueba la rama de desarrollo "nightly", ya que podrías descubrir que no necesitas crear uno. Cuando crees un informe de error, por favor [incluye tantos detalles como sea posible](#cómo-presentar-un-buen-informe-de-error). Rellena [la plantilla requerida](ISSUE_TEMPLATE/bug_report.yml), la información que solicita nos ayuda a resolver los problemas más rápido.
 
-> **Note:** Regressions can happen. If you find a **Closed** issue that seems like your issue, go ahead and open a new issue and include a link to the original issue in the body of your new one. All you need to create a link is the issue number, preceded by #. For example, #8888.
+> **Nota:** Las regresiones pueden ocurrir. Si encuentras un problema **cerrado** que parece ser similar al tuyo, adelante y abre un nuevo problema e incluye un enlace al problema original en el cuerpo del nuevo. Todo lo que necesitas para crear un enlace es el número de problema, precedido por #. Por ejemplo, #8888.
 
-#### How Do I Submit A (Good) Bug Report?
+#### ¿Cómo Presento un Buen Informe de Error?
 
-Bugs are tracked as [GitHub issues](https://guides.github.com/features/issues/). Use the New Issue button to create an issue and provide the following information by filling in [the template](ISSUE_TEMPLATE/bug_report.yml).
+Los errores se rastrean como [problemas de GitHub](https://guides.github.com/features/issues/). Utiliza el botón "New Issue" para crear un problema y proporciona la siguiente información completando [la plantilla](ISSUE_TEMPLATE/bug_report.yml).
 
-Explain the problem and include additional details to help maintainers reproduce the problem:
+Explica el problema e incluye detalles adicionales para ayudar a los mantenedores a reproducir el problema:
 
-* **Use a clear and descriptive title** for the issue to identify the problem.
-* **Describe the exact steps which reproduce the problem** in as many details as possible. For example, start by explaining how you started Marlin, e.g. which command exactly you used in the terminal, or how you started Marlin otherwise. When listing steps, **don't just say what you did, but explain how you did it**. For example, if you moved the cursor to the end of a line, explain if you used the mouse, or a keyboard shortcut or an Marlin command, and if so which one?
-* **Provide specific examples to demonstrate the steps**. Include links to files or GitHub projects, or copy/pasteable snippets, which you use in those examples. If you're providing snippets or log output in the issue, use [Markdown code blocks](https://help.github.com/articles/markdown-basics/#multiple-lines).
-* **Describe the behavior you observed after following the steps** and point out what exactly is the problem with that behavior.
-* **Explain which behavior you expected to see instead and why.**
-* **Include detailed log output** especially for probing and leveling. See below for usage of `DEBUG_LEVELING_FEATURE`.
-* **Include screenshots, links to videos, etc.** which clearly demonstrate the problem.
-* **Include G-code** (if relevant) that reliably causes the problem to show itself.
-* **If the problem wasn't triggered by a specific action**, describe what you were doing before the problem happened and share more information using the guidelines below.
+* **Utiliza un título claro y descriptivo** para identificar el problema.
+* **Describe los pasos exactos que reproducen el problema** con tantos detalles como sea posible. Por ejemplo, comienza explicando cómo iniciaste Marlin, por ejemplo, qué comando exacto usaste en la terminal, o cómo iniciaste Marlin de otra manera. Al enumerar los pasos, **no te limites a decir qué hiciste, sino explica cómo lo hiciste**. Por ejemplo, si moviste el cursor al final de una línea, explica si usaste el ratón, un atajo de teclado o un comando de Marlin, y en caso afirmativo, cuál.
+* **Proporciona ejemplos específicos para demostrar los pasos**. Incluye enlaces a archivos o proyectos de GitHub, o fragmentos de código que se puedan copiar y pegar, que utilices en esos ejemplos. Si proporcionas fragmentos de código o registros en el problema, utiliza [bloques de código en formato Markdown](https://help.github.com/articles/markdown-basics/#multiple-lines).
+* **Describe el comportamiento que observaste después de seguir los pasos** y señala cuál es exactamente el problema con ese comportamiento.
+* **Explica qué comportamiento esperabas ver en su lugar y por qué**.
+* **Incluye un registro detallado de salida**, especialmente para la exploración y nivelación. Consulta a continuación el uso de `DEBUG_LEVELING_FEATURE`.
+* **Incluye capturas de pantalla, enlaces a videos, etc.** que muestren claramente el problema.
+* **Incluye G-code** (si corresponde) que provoque de manera confiable la aparición del problema.
+* **Si el problema no se desencadenó por una acción específica**, describe qué estabas haciendo antes de que ocurriera el problema y comparte más información siguiendo las pautas a continuación.
 
-Provide more context:
+Proporciona más contexto:
 
-* **Can you reproduce the problem with a minimum of options enabled?**
-* **Did the problem start happening recently** (e.g. after updating to a new version of Marlin) or was this always a problem?
-* If the problem started happening recently, **can you reproduce the problem in an older version of Marlin?** What's the most recent version in which the problem doesn't happen? You can download older versions of Marlin from [the releases page](https://github.com/MarlinFirmware/Marlin/releases).
-* **Can you reliably reproduce the issue?** If not, provide details about how often the problem happens and under which conditions it normally happens.
+* **¿Puedes reproducir el problema con un mínimo de opciones habilitadas?**
+* **¿El problema comenzó a ocurrir recientemente** (por ejemplo, después de actualizar a una nueva versión de Marlin) o siempre ha sido un problema?
+* Si el problema comenzó a ocurrir recientemente, **¿puedes reproducir el problema en una versión anterior de Marlin?** ¿En qué versión más reciente no ocurre el problema? Puedes descargar versiones anteriores de Marlin desde [la página de lanzamientos](https://github.com/MarlinFirmware/Marlin/releases).
+* **¿Puedes reproducir el problema de manera confiable?** Si no es así, proporciona detalles sobre qué tan a menudo ocurre el problema y en qué condiciones suele ocurrir.
 
-Include details about your configuration and environment:
+Incluye detalles sobre tu configuración y entorno:
 
-* **Which version of Marlin are you using?** Marlin's exact version and build date can be seen in the startup message when a host connects to Marlin, or in the LCD Info menu (if enabled).
-* **What kind of 3D Printer and electronics are you using**?
-* **What kind of add-ons (probe, filament sensor) do you have**?
-* **Include your Configuration files.** Make a ZIP file containing `Configuration.h` and `Configuration_adv.h` and drop it on your reply.
+* **¿Qué versión de Marlin estás utilizando?** Puedes ver la versión exacta y la fecha de compilación de Marlin en el mensaje de inicio cuando se conecta un host a Marlin, o en el menú de información LCD (si está habilitado).
+* **¿Qué tipo de impresora 3D y electrónica estás utilizando?**
+* **¿Qué complementos (sonda, sensor de filamento) tienes?**
+* **Incluye tus archivos de configuración**. Haz un archivo
 
-### Suggesting Features or Changes
+ ZIP que contenga `Configuration.h` y `Configuration_adv.h` y adjúntalo en tu respuesta.
 
-This section guides you through submitting a suggestion for Marlin, including completely new features and minor improvements to existing functionality. Following these guidelines helps maintainers and the community understand your suggestion and find related suggestions.
+### Sugerir características o cambios
 
-Before creating a suggestion, please check [this list](https://github.com/MarlinFirmware/Marlin/issues?q=is%3Aopen+is%3Aissue+label%3A%22T%3A+Feature+Request%22) as you might find out that you don't need to create one. When you are creating an enhancement suggestion, please [include as many details as possible](#how-do-i-submit-a-good-feature-request). Fill in [the template](ISSUE_TEMPLATE/feature_request.yml), including the steps that you imagine you would take if the feature you're requesting existed.
+Esta sección te guía para enviar una sugerencia para Marlin, incluyendo nuevas funciones completamente y mejoras menores a la funcionalidad existente. Seguir estas pautas ayuda a los mantenedores y a la comunidad a comprender tu sugerencia y encontrar sugerencias relacionadas.
 
-#### Before Submitting a Feature Request
+Antes de crear una sugerencia, por favor verifica [esta lista](https://github.com/MarlinFirmware/Marlin/issues?q=is%3Aopen+is%3Aissue+label%3A%22T%3A+Feature+Request%22), ya que es posible que descubras que no necesitas crear una nueva. Cuando estés creando una sugerencia de mejora, por favor [incluye tantos detalles como sea posible](#cómo-puedo-enviar-una-solicitud-de-función-buena). Completa [la plantilla](ISSUE_TEMPLATE/feature_request.yml), incluyendo los pasos que imaginas que tomarías si la función que estás solicitando existiera.
 
-* **Check the [Marlin website](https://marlinfw.org/)** for tips — you might discover that the feature is already included. Most importantly, check if you're using [the latest version of Marlin](https://github.com/MarlinFirmware/Marlin/releases) and if you can get the desired behavior by changing [Marlin's config settings](https://marlinfw.org/docs/configuration/configuration.html).
-* **Perform a [cursory search](https://github.com/MarlinFirmware/Marlin/issues?q=is%3Aopen+is%3Aissue+label%3A%22T%3A+Feature+Request%22)** to see if the enhancement has already been suggested. If it has, add a comment to the existing issue instead of opening a new one.
+#### Antes de enviar una solicitud de función
 
-#### How Do I Submit A (Good) Feature Request?
+* **Verifica el [sitio web de Marlin](https://marlinfw.org/)** para obtener consejos; es posible que descubras que la función ya está incluida. Lo más importante es verificar si estás utilizando [la última versión de Marlin](https://github.com/MarlinFirmware/Marlin/releases) y si puedes obtener el comportamiento deseado cambiando [la configuración de Marlin](https://marlinfw.org/docs/configuration/configuration.html).
+* **Realiza una [búsqueda superficial](https://github.com/MarlinFirmware/Marlin/issues?q=is%3Aopen+is%3Aissue+label%3A%22T%3A+Feature+Request%22)** para ver si la mejora ya ha sido sugerida. Si es así, agrega un comentario al problema existente en lugar de abrir uno nuevo.
 
-Feature Requests are tracked as [GitHub issues](https://guides.github.com/features/issues/). Please follow these guidelines in your request:
+#### ¿Cómo puedo enviar una solicitud de función (buena)?
 
-* **Use a clear and descriptive title** for the issue to identify the suggestion.
-* **Provide a step-by-step description of the requested feature** in as much detail as possible.
-* **Provide specific examples to demonstrate the steps**.
-* **Describe the current behavior** and **explain which behavior you expected to see instead** and why.
-* **Include screenshots and links to videos** which demonstrate the feature or point out the part of Marlin to which the request is related.
-* **Explain why this feature would be useful** to most Marlin users.
-* **Name other firmwares that have this feature, if any.**
+Las solicitudes de funciones se registran como [problemas en GitHub](https://guides.github.com/features/issues/). Por favor, sigue estas pautas en tu solicitud:
 
-### Your First Code Contribution
+* **Utiliza un título claro y descriptivo** para identificar la sugerencia.
+* **Proporciona una descripción paso a paso de la función solicitada** con todos los detalles posibles.
+* **Proporciona ejemplos específicos para demostrar los pasos**.
+* **Describe el comportamiento actual** y **explica qué comportamiento esperabas ver en su lugar** y por qué.
+* **Incluye capturas de pantalla y enlaces a videos** que demuestren la función o señalen la parte de Marlin a la que se refiere la solicitud.
+* **Explica por qué esta función sería útil** para la mayoría de los usuarios de Marlin.
+* **Menciona otros firmware que tengan esta función, si los hay**.
 
-Unsure where to begin contributing to Marlin? You can start by looking through these `good-first-issue` and `help-wanted` issues:
+### Tu primera contribución de código
 
-* [Beginner issues][good-first-issue] - issues which should only require a few lines of code, and a test or two.
-* [Help Wanted issues][help-wanted] - issues which should be a bit more involved than `beginner` issues.
+¿No estás seguro por dónde empezar a contribuir a Marlin? Puedes comenzar revisando estos problemas etiquetados como `good-first-issue` y `help-wanted`:
+
+* [Problemas para principiantes][good-first-issue] - problemas que solo requieren unas pocas líneas de código y un par de pruebas.
+* [Problemas que necesitan ayuda][help-wanted] - problemas que requieren un poco más de trabajo que los problemas para principiantes.
 
 ### Pull Requests
 
-Pull Requests should always be targeted to working branches (e.g., `bugfix-2.1.x` and/or `bugfix-1.1.x`) and never to release branches (e.g., `2.0.x` and/or `1.1.x`). If this is your first Pull Request, please read our [Guide to Pull Requests](https://marlinfw.org/docs/development/getting_started_pull_requests.html) and Github's [Pull Request](https://help.github.com/articles/creating-a-pull-request/) documentation.
+Las Pull Requests siempre deben dirigirse a ramas de trabajo (por ejemplo, `bugfix-2.1.x` y/o `bugfix-1.1.x`) y nunca a ramas de lanzamiento (por ejemplo, `2.0.x` y/o `1.1.x`). Si esta es tu primera Pull Request, por favor lee nuestra [Guía para Pull Requests](https://marlinfw.org/docs/development/getting_started_pull_requests.html) y la documentación de [Pull Request](https://help.github.com/articles/creating-a-pull-request/) de Github.
 
-* Fill in [the required template](pull_request_template.md).
-* Don't include issue numbers in the PR title.
-* Include pictures, diagrams, and links to videos in your Pull Request to demonstrate your changes, if needed.
-* Follow the [Coding Standards](https://marlinfw.org/docs/development/coding_standards.html) posted on our website.
-* Document new code with clear and concise comments.
-* End all files with a newline.
+* Completa [la plantilla requerida](pull_request_template.md).
+* No incluyas números de problemas en el título de la PR.
+* Incluye imágenes, diagramas y enlaces a videos en tu Pull Request para demostrar tus cambios, si es necesario.
+* Sigue los [Estándares de Codificación](https://marlinfw.org/docs/development/coding_standards.html) publicados en nuestro sitio web.
+* Documenta el código nuevo con comentarios claros y concisos.
+* Finaliza todos los archivos con una nueva línea.
 
-## Styleguides
+## Guías de estilo
 
-### Git Commit Messages
+### Mensajes de Commit de Git
 
-* Use the present tense ("Add feature" not "Added feature").
-* Use the imperative mood ("Move cursor to..." not "Moves cursor to...").
-* Limit the first line to 72 characters or fewer.
-* Reference issues and Pull Requests liberally after the first line.
+* Usa el tiempo presente ("Agregar característica" en lugar de "Agregada característica").
+* Usa el modo imperativo ("Mover cursor a..." en lugar de "Mueve cursor a...").
+* Limita la primera línea a 72 caracteres o menos.
+* Hace referencia a problemas y Pull Requests de manera liberal después de la primera línea.
 
-### C++ Coding Standards
+### Estándares de Codificación en C++
 
-* Please read and follow the [Coding Standards](https://marlinfw.org/docs/development/coding_standards.html) posted on our website. Failure to follow these guidelines will delay evaluation and acceptance of Pull Requests.
+* Por favor, lee y sigue los [Estándares de Codificación](https://marlinfw.org/docs/development/coding_standards.html) publicados en nuestro sitio web. El no seguir estas pautas retrasará la evaluación y aceptación de las Pull Requests.
 
-### Documentation
+### Documentación
 
-* Guidelines for documentation are still under development. In-general, be clear, concise, and to-the-point.
+* Las directrices para la documentación aún están en desarrollo. En general, sé claro, conciso y al punto.

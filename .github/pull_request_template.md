@@ -1,33 +1,33 @@
 <!--
 
-Submitting a Pull Request
+Envío de un Pull Request
 
-- Please fill out all sections of this form. You can delete the helpful comments.
-- Pull Requests without clear information will take longer and may even be rejected.
-- We get a high volume of submissions so please be patient during review.
+- Por favor, completa todas las secciones de este formulario. Puedes eliminar los comentarios útiles.
+- Los Pull Requests sin información clara tomarán más tiempo y podrían ser rechazados.
+- Recibimos un alto volumen de envíos, así que por favor ten paciencia durante la revisión.
 
 -->
 
-### Description
+### Descripción
 
 <!--
 
-Clearly describe the submitted changes with lots of details. Include images where helpful. Initial reviewers may not be familiar with the subject, so be as thorough as possible. You can use MarkDown syntax to improve readability with bullet lists, code blocks, and so on. PREVIEW and fix up formatting before submitting.
+Describe claramente los cambios enviados con muchos detalles. Incluye imágenes si es útil. Los revisores iniciales pueden no estar familiarizados con el tema, así que sé lo más detallado posible. Puedes usar la sintaxis de Markdown para mejorar la legibilidad con listas de viñetas, bloques de código, y demás. PREVISUALIZA y arregla el formato antes de enviarlo.
 
 -->
 
-### Requirements
+### Requisitos
 
-<!-- Does this PR require a specific board, LCD, etc.? -->
+<!-- ¿Este PR requiere una placa específica, LCD, etc.? -->
 
-### Benefits
+### Beneficios
 
-<!-- What does this PR fix or improve? -->
+<!-- ¿Qué arregla o mejora este PR? -->
 
-### Configurations
+### Configuraciones
 
-<!-- Attach Configurations ZIP and any other files needed to test this PR. -->
+<!-- Adjunta el archivo ZIP de las configuraciones y cualquier otro archivo necesario para probar este PR. -->
 
-### Related Issues
+### Issues Relacionados
 
-<!-- Does this PR fix a bug or fulfill a Feature Request? Link related Issues here. -->
+<!-- ¿Este PR arregla un error o cumple con una solicitud de funcionalidad? Enlaza los Issues relacionados aquí. -->

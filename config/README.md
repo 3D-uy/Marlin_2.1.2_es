@@ -1,9 +1,9 @@
-# Where have all the configurations gone?
+# ¿A dónde se han ido todas las configuraciones?
 
-Marlin configurations for specific machines are now maintained in their own repository at:
+Las configuraciones de Marlin para máquinas específicas ahora se mantienen en su propio repositorio en:
 
 ## https://github.com/MarlinFirmware/Configurations/tree/bugfix-2.1.x
 
-Configuration files for use with the nightly `bugfix-2.1.x` branch can be downloaded from:
+Los archivos de configuración para usar con la rama nocturna `bugfix-2.1.x` se pueden descargar desde:
 
 ## https://github.com/MarlinFirmware/Configurations/archive/bugfix-2.1.x.zip

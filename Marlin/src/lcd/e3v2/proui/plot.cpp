@@ -23,18 +23,20 @@
 /**
  * DWIN Single var plot
  * Author: Miguel A. Risco-Castillo
- * Version: 2.2.3
- * Date: 2023/01/29
+ * Version: 2.1.2
+ * Date: 2022/11/20
  */
 
 #include "../../../inc/MarlinConfig.h"
 
 #if ALL(DWIN_LCD_PROUI, SHOW_TUNING_GRAPH)
 
-#include "dwin.h"
+#include "plot.h"
 #include "../../../core/types.h"
 #include "../../marlinui.h"
-#include "plot.h"
+#include "dwin_lcd.h"
+#include "dwinui.h"
+#include "dwin.h"
 
 #define Plot_Bg_Color RGB( 1, 12,  8)
 
@@ -44,7 +46,7 @@ uint16_t grphpoints, r, x2, y2 = 0;
 frame_rect_t grphframe = {0};
 float scale = 0;
 
-void PlotClass::Draw(const frame_rect_t &frame, const_float_t max, const_float_t ref/*=0*/) {
+void PlotClass::Draw(const frame_rect_t &frame, const celsius_t max, const_float_t ref/*=0*/) {
   grphframe = frame;
   grphpoints = 0;
   scale = frame.h / max;
@@ -52,22 +54,22 @@ void PlotClass::Draw(const frame_rect_t &frame, const_float_t max, const_float_t
   y2 = frame.y + frame.h - 1;
   r = round((y2) - ref * scale);
   DWINUI::Draw_Box(1, Plot_Bg_Color, frame);
-  for (uint8_t i = 1; i < 4; i++) if (i * 50 < frame.w) dwinDrawVLine(Line_Color, i * 50 + frame.x, frame.y, frame.h);
+  for (uint8_t i = 1; i < 4; i++) if (i * 50 < frame.w) DWIN_Draw_VLine(Line_Color, i * 50 + frame.x, frame.y, frame.h);
   DWINUI::Draw_Box(0, Color_White, DWINUI::ExtendFrame(frame, 1));
-  dwinDrawHLine(Color_Red, frame.x, r, frame.w);
+  DWIN_Draw_HLine(Color_Red, frame.x, r, frame.w);
 }
 
 void PlotClass::Update(const_float_t value) {
   if (!scale) return;
   const uint16_t y = round((y2) - value * scale);
   if (grphpoints < grphframe.w) {
-    dwinDrawPoint(Color_Yellow, 1, 1, grphpoints + grphframe.x, y);
+    DWIN_Draw_Point(Color_Yellow, 1, 1, grphpoints + grphframe.x, y);
   }
   else {
-    dwinFrameAreaMove(1, 0, 1, Plot_Bg_Color, grphframe.x, grphframe.y, x2, y2);
-    if ((grphpoints % 50) == 0) dwinDrawVLine(Line_Color, x2 - 1, grphframe.y + 1, grphframe.h - 2);
-    dwinDrawPoint(Color_Red, 1, 1, x2 - 1, r);
-    dwinDrawPoint(Color_Yellow, 1, 1, x2 - 1, y);
+    DWIN_Frame_AreaMove(1, 0, 1, Plot_Bg_Color, grphframe.x, grphframe.y, x2, y2);
+    if ((grphpoints % 50) == 0) DWIN_Draw_VLine(Line_Color, x2 - 1, grphframe.y + 1, grphframe.h - 2);
+    DWIN_Draw_Point(Color_Red, 1, 1, x2 - 1, r);
+    DWIN_Draw_Point(Color_Yellow, 1, 1, x2 - 1, y);
   }
   grphpoints++;
 }

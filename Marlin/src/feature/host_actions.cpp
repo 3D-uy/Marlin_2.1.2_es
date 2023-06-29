@@ -41,7 +41,8 @@ HostUI hostui;
 
 void HostUI::action(FSTR_P const fstr, const bool eol) {
   PORT_REDIRECT(SerialMask::All);
-  SERIAL_ECHOPGM("//action:", fstr);
+  SERIAL_ECHOPGM("//action:");
+  SERIAL_ECHOF(fstr);
   if (eol) SERIAL_EOL();
 }
 
@@ -106,7 +107,7 @@ void HostUI::action(FSTR_P const fstr, const bool eol) {
   void HostUI::prompt(FSTR_P const ptype, const bool eol/*=true*/) {
     PORT_REDIRECT(SerialMask::All);
     action(F("prompt_"), false);
-    SERIAL_ECHO(ptype);
+    SERIAL_ECHOF(ptype);
     if (eol) SERIAL_EOL();
   }
 

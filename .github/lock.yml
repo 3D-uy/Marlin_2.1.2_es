@@ -1,33 +1,30 @@
 #
-# Configuration for Lock Threads - https://github.com/dessant/lock-threads-app
+# Configuración para Lock Threads - https://github.com/dessant/lock-threads-app
 #
 
-# Number of days of inactivity before a closed issue or pull request is locked
+# Número de días de inactividad antes de que se bloquee un issue o pull request cerrado
 daysUntilLock: 60
 
-# Skip issues and pull requests created before a given timestamp. Timestamp must
-# follow ISO 8601 (`YYYY-MM-DD`). Set to `false` to disable
+# Omitir issues y pull requests creados antes de una marca de tiempo específica. La marca de tiempo debe seguir el formato ISO 8601 (`AAAA-MM-DD`). Establecer en `false` para deshabilitar
 skipCreatedBefore: false
 
-# Issues and pull requests with these labels will be ignored. Set to `[]` to disable
+# Los issues y pull requests con estas etiquetas serán ignorados. Establecer en `[]` para deshabilitar
 exemptLabels: [ 'no-locking' ]
 
-# Label to add before locking, such as `outdated`. Set to `false` to disable
+# Etiqueta a añadir antes de bloquear, como `desactualizado`. Establecer en `false` para deshabilitar
 lockLabel: false
 
-# Comment to post before locking. Set to `false` to disable
+# Comentario a publicar antes de bloquear. Establecer en `false` para deshabilitar
 lockComment: >
-  This thread has been automatically locked since there has not been
-  any recent activity after it was closed. Please open a new issue for
-  related bugs.
+  Este hilo ha sido bloqueado automáticamente debido a la falta de actividad reciente después de haber sido cerrado. Por favor, abre un nuevo issue para reportar errores relacionados.
 
-# Assign `resolved` as the reason for locking. Set to `false` to disable
+# Asignar `resuelto` como motivo de bloqueo. Establecer en `false` para deshabilitar
 setLockReason: true
 
-# Limit to only `issues` or `pulls`
+# Limitar solo a `issues` o `pulls`
 # only: issues
 
-# Optionally, specify configuration settings just for `issues` or `pulls`
+# Opcionalmente, especificar configuraciones solo para `issues` o `pulls`
 # issues:
 #   exemptLabels:
 #     - help-wanted
@@ -36,5 +33,5 @@ setLockReason: true
 # pulls:
 #   daysUntilLock: 30
 
-# Repository to extend settings from
+# Repositorio desde el cual extender las configuraciones
 # _extends: repo

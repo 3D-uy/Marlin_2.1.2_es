@@ -1,6 +1,6 @@
 #
 # close-stale.yml
-# Close open issues after a period of inactivity
+# Cierra los problemas abiertos después de un período de inactividad
 #
 
 name: Close Stale Issues

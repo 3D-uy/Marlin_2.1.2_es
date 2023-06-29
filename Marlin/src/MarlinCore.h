@@ -1,22 +1,22 @@
 /**
- * Marlin 3D Printer Firmware
+ * Firmware de la Impresora 3D Marlin
  * Copyright (c) 2020 MarlinFirmware [https://github.com/MarlinFirmware/Marlin]
  *
- * Based on Sprinter and grbl.
+ * Basado en Sprinter y grbl.
  * Copyright (c) 2011 Camiel Gubbels / Erik van der Zalm
  *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * Este programa es software libre: puede redistribuirlo y/o modificarlo
+ * bajo los términos de la Licencia Pública General GNU publicada por
+ * la Free Software Foundation, ya sea la versión 3 de la Licencia, o
+ * (a su elección) cualquier versión posterior.
  *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * Este programa se distribuye con la esperanza de que sea útil,
+ * pero SIN GARANTÍA; sin siquiera la garantía implícita de
+ * COMERCIABILIDAD o APTITUD PARA UN PROPÓSITO PARTICULAR. Consulte la
+ * Licencia Pública General GNU para obtener más detalles.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ * Debería haber recibido una copia de la Licencia Pública General GNU
+ * junto con este programa. Si no, consulte <https://www.gnu.org/licenses/>.
  *
  */
 #pragma once
@@ -29,19 +29,19 @@
 
 void stop();
 
-// Pass true to keep steppers from timing out
+// Pasar true para evitar que los motores se apaguen automáticamente
 void idle(const bool no_stepper_sleep=false);
 inline void idle_no_sleep() { idle(true); }
 
 #if ENABLED(G38_PROBE_TARGET)
-  extern uint8_t G38_move;          // Flag to tell the ISR that G38 is in progress, and the type
-  extern bool G38_did_trigger;      // Flag from the ISR to indicate the endstop changed
+  extern uint8_t G38_move;          // Bandera para indicar al ISR que G38 está en progreso y el tipo
+  extern bool G38_did_trigger;      // Bandera desde el ISR para indicar que se activó el fin de carrera
 #endif
 
 void kill(FSTR_P const lcd_error=nullptr, FSTR_P const lcd_component=nullptr, const bool steppers_off=false);
 void minkill(const bool steppers_off=false);
 
-// Global State of the firmware
+// Estado global del firmware
 enum MarlinState : uint8_t {
   MF_INITIALIZING = 0,
   MF_STOPPED,

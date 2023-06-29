@@ -1,25 +1,25 @@
 #
-# Marlin 3D Printer Firmware
-# Copyright (c) 2020 MarlinFirmware [https://github.com/MarlinFirmware/Marlin]
+# Firmware de la Impresora 3D Marlin
+# Derechos de autor (c) 2020 MarlinFirmware [https://github.com/MarlinFirmware/Marlin]
 #
-# Based on Sprinter and grbl.
-# Copyright (c) 2011 Camiel Gubbels / Erik van der Zalm
+# Basado en Sprinter y grbl.
+# Derechos de autor (c) 2011 Camiel Gubbels / Erik van der Zalm
 #
-# This program is free software: you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation, either version 3 of the License, or
-# (at your option) any later version.
+# Este programa es software libre: puedes redistribuirlo y/o modificarlo
+# bajo los términos de la Licencia Pública General de GNU publicada por
+# la Free Software Foundation, ya sea la versión 3 de la Licencia, o
+# (a tu elección) cualquier versión posterior.
 #
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
+# Este programa se distribuye con la esperanza de que sea útil,
+# pero SIN GARANTÍA ALGUNA; sin incluso la garantía implícita de
+# COMERCIABILIDAD o ADECUACIÓN PARA UN PROPÓSITO PARTICULAR. Consulta la
+# Licencia Pública General de GNU para obtener más detalles.
 #
-# You should have received a copy of the GNU General Public License
-# along with this program.  If not, see <https://www.gnu.org/licenses/>.
+# Deberías haber recibido una copia de la Licencia Pública General de GNU
+# junto con este programa. Si no, consulta <https://www.gnu.org/licenses/>.
 #
 
-# Generated files
+# Archivos generados
 _Version.h
 bdf2u8g.exe
 genpages.exe
@@ -30,64 +30,64 @@ csv-out/
 *.gen
 *.sublime-workspace
 
-# OS
+# Sistema operativo
 applet/
 .DS_Store
 
-# Compiled C++ Object files
+# Archivos de objeto C++ compilados
 *.slo
 *.lo
 *.o
 *.obj
 *.ino.cpp
 
-# Precompiled Headers
+# Encabezados precompilados
 *.gch
 *.pch
 
-# Compiled Dynamic libraries
+# Bibliotecas dinámicas compiladas
 *.so
 *.dylib
 *.dll
 
-# Fortran module files
+# Archivos de módulo Fortran
 *.mod
 *.smod
 
-# Compiled Static libraries
+# Bibliotecas estáticas compiladas
 *.lai
 *.la
 *.a
 *.lib
 
-# Executables
+# Ejecutables
 *.exe
 *.out
 *.app
 
-# Compiled C Object files
+# Archivos de objeto C compilados
 *.o
 *.ko
 *.obj
 *.elf
 
-# Precompiled Headers
+# Encabezados precompilados
 *.gch
 *.pch
 
-# Libraries
+# Bibliotecas
 *.lib
 *.a
 *.la
 *.lo
 
-# Shared objects (inc. Windows DLLs)
+# Objetos compartidos (incluidas las DLL de Windows)
 *.dll
 *.so
 *.so.*
 *.dylib
 
-# Executables
+# Ejecutables
 *.exe
 *.out
 *.app
@@ -95,11 +95,11 @@ applet/
 *.x86_64
 *.hex
 
-# Debug files
+# Archivos de depuración
 *.dSYM/
 *.su
 
-# PlatformIO files/dirs
+# Archivos/directorios de PlatformIO
 .pio*
 .pioenvs
 .piolibdeps
@@ -107,7 +107,7 @@ applet/
 .gcc-flags.json
 /lib/
 
-# Secure Credentials
+# Credenciales seguras
 Configuration_Secure.h
 
 # Visual Studio
@@ -125,16 +125,14 @@ vc-fileutils.settings
 .vscode/*
 !.vscode/extensions.json
 
-# Simulation files
+# Archivos de simulación
 imgui.ini
 eeprom.dat
 spi_flash.bin
 fs.img
 
 # CMake
-buildroot/share/cmake/*
 CMakeLists.txt
-!buildroot/share/cmake/CMakeLists.txt
 src/CMakeLists.txt
 CMakeListsPrivate.txt
 build/
@@ -152,10 +150,10 @@ cmake-build-*
 # Python
 __pycache__
 
-# IOLogger logs
+# Registros de IOLogger
 *_log.csv
 
-# Misc.
+# Varios
 *~
 *.orig
 *.rej

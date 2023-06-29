@@ -50,7 +50,7 @@ namespace ExtUI {
     screen.printerKilled(error, component);
   }
 
-  void onMediaInserted() { TERN_(HAS_MEDIA, screen.sdCardInserted()); }
+  void onMediaInserted() { TERN_(HAS_MEDIA, screen.sDCardInserted()); }
   void onMediaError()    { TERN_(HAS_MEDIA, screen.sdCardError()); }
   void onMediaRemoved()  { TERN_(HAS_MEDIA, screen.sdCardRemoved()); }
 

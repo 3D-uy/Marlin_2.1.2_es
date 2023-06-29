@@ -1,9 +1,9 @@
 #
 # lock-closed.yml
-# Lock closed issues after a period of inactivity
+# Bloquea los problemas cerrados después de un período de inactividad
 #
 
-name: Lock Closed Issues
+name: Bloquear Problemas Cerrados
 
 on:
   schedule:
@@ -11,7 +11,7 @@ on:
 
 jobs:
   lock:
-    name: Lock Closed Issues
+    name: Bloquear Problemas Cerrados
     if: github.repository == 'MarlinFirmware/Marlin'
 
     runs-on: ubuntu-latest
@@ -26,7 +26,6 @@ jobs:
         issue-exclude-labels: 'no-locking'
         issue-lock-labels: ''
         issue-lock-comment: >
-          This issue has been automatically locked since there
-          has not been any recent activity after it was closed.
-          Please open a new issue for related bugs.
+          // Este problema ha sido bloqueado automáticamente ya que no ha habido ninguna actividad reciente después de su cierre.
+          // Por favor, abre un nuevo problema para reportar errores relacionados.
         issue-lock-reason: ''

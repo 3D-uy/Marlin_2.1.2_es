@@ -1,6 +1,6 @@
 #
 # check-pr.yml
-# Close PRs directed at release branches
+# Cierra las solicitudes de extracción dirigidas a ramas de lanzamiento
 #
 
 name: PR Bad Target
@@ -25,10 +25,10 @@ jobs:
     - uses: superbrothers/close-pull-request@v3
       with:
         comment: >
-          Thanks for your contribution! Unfortunately we can't accept PRs directed at release branches. We make patches to the bugfix branches and only later do we push them out as releases.
+          ¡Gracias por tu contribución! Desafortunadamente, no podemos aceptar solicitudes de extracción dirigidas a ramas de lanzamiento. Realizamos parches en las ramas de corrección de errores y solo después los lanzamos como versiones.
 
-          Please redo this PR starting with the `bugfix-2.1.x` branch and be careful to target `bugfix-2.1.x` when resubmitting the PR. Patches may also target `bugfix-2.0.x` if they are specifically for 2.0.9.x.
+          Por favor, vuelve a hacer esta solicitud de extracción comenzando con la rama `bugfix-2.1.x` y asegúrate de apuntar a `bugfix-2.1.x` al volver a enviar la solicitud. Los parches también pueden apuntar a `bugfix-2.0.x` si son específicos para 2.0.9.x.
 
-          It may help to set your fork's default branch to `bugfix-2.1.x`.
+          Puede ser útil establecer la rama predeterminada de tu bifurcación en `bugfix-2.1.x`.
 
-          See [this page](https://marlinfw.org/docs/development/getting_started_pull_requests.html) for full instructions.
+          Consulta [esta página](https://marlinfw.org/docs/development/getting_started_pull_requests.html) para obtener instrucciones completas.

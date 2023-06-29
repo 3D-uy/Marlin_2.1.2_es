@@ -60,7 +60,7 @@
 TouchButtons touchBt;
 
 void TouchButtons::init() {
-  touchIO.init();
+  touchIO.Init();
   TERN_(HAS_TOUCH_SLEEP, next_sleep_ms = millis() + SEC_TO_MS(ui.sleep_timeout_minutes * 60));
 }
 
