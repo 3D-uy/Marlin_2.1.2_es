@@ -1616,15 +1616,20 @@
 #define Z_CLEARANCE_DEPLOY_PROBE   10 // Espacio libre Z para desplegar/guardar
 #define Z_CLEARANCE_BETWEEN_PROBES  5 // Espacio libre Z entre puntos de sondeo
 #define Z_CLEARANCE_MULTI_PROBE     5 // Espacio libre Z entre sondas múltiples
+#define Z_PROBE_ERROR_TOLERANCE     3 // (mm) Tolerancia para activación anticipada (<= -probe.offset.z + ZPET)
 //#define Z_AFTER_PROBING           5 // Posición Z después del sondeo
 
 #define Z_PROBE_LOW_POINT          -2 // Distancia más lejana por debajo del punto de activación para detenerse
 
-// Para M851, proporciona un rango para ajustar la compensación de la sonda Z
-#define Z_PROBE_OFFSET_RANGE_MIN -20
-#define Z_PROBE_OFFSET_RANGE_MAX 20
+// For M851 provide ranges for adjusting the X, Y, and Z probe offsets
+//#define PROBE_OFFSET_XMIN -50   // (mm)
+//#define PROBE_OFFSET_XMAX  50   // (mm)
+//#define PROBE_OFFSET_YMIN -50   // (mm)
+//#define PROBE_OFFSET_YMAX  50   // (mm)
+//#define PROBE_OFFSET_ZMIN -20   // (mm)
+//#define PROBE_OFFSET_ZMAX  20   // (mm)
 
-// Habilita la prueba de repetibilidad M48 para probar la precisión de la sonda
+// Enable the M48 repeatability test to test probe accuracy
 //#define Z_MIN_PROBE_REPEATABILITY_TEST
 
 // Antes de desplegar/guardar, pausa para confirmación del usuario
@@ -1731,6 +1736,9 @@
                                     // Asegúrate de tener suficiente espacio libre sobre Z_MAX_POS para evitar rozamientos.
 
 //#define Z_AFTER_HOMING         10 // (mm) Altura a la que moverse después de homing (si Z fue homed)
+// #define XY_AFTER_HOMING { 10, 10 }  // (mm) Mover a una posición XY después de homing (y elevar Z)
+
+// #define EVENT_GCODE_AFTER_HOMING "M300 P440 S200"  // Comandos a ejecutar después de G28 (y mover a XY_AFTER_HOMING)
 
 // Dirección de los finales de carrera al realizar homing; 1=MAX, -1=MIN
 // :[-1,1]
@@ -1743,6 +1751,21 @@
 //#define U_HOME_DIR -1
 //#define V_HOME_DIR -1
 //#define W_HOME_DIR -1
+
+/**
+ * Paradas de seguridad
+ * Si un eje tiene finales de carrera en ambos extremos, el especificado anteriormente se utiliza para
+ * homing, mientras que el otro se puede usar para cosas como SD_ABORT_ON_ENDSTOP_HIT.
+ */
+//#define X_SAFETY_STOP
+//#define Y_SAFETY_STOP
+//#define Z_SAFETY_STOP
+//#define I_SAFETY_STOP
+//#define J_SAFETY_STOP
+//#define K_SAFETY_STOP
+//#define U_SAFETY_STOP
+//#define V_SAFETY_STOP
+//#define W_SAFETY_STOP
 
 // @section geometría
 
@@ -1972,10 +1995,17 @@
 //#define MESH_BED_LEVELING
 
 /**
- * Normalmente, G28 desactiva el nivelado al completarse. Habilita una de
- * estas opciones para restaurar el estado de nivelado anterior o habilitar
- * siempre el nivelado inmediatamente después de G28.
+ * Comandos a ejecutar al final del probing G29.
+ * Útiles para retraer o mover la sonda Z fuera del camino.
  */
+//#define Z_PROBE_END_SCRIPT "G1 Z10 F12000\nG1 X15 Y330\nG1 Z0.5\nG1 Z10"
+
+/**
+ * Normalmente, G28 deshabilita el nivelado al completarse. Habilita una de
+ * estas opciones para restaurar el estado de nivelado anterior o para habilitar siempre
+ * el nivelado inmediatamente después de G28.
+ */
+
 //#define RESTORE_LEVELING_AFTER_G28
 //#define ENABLE_LEVELING_AFTER_G28
 
@@ -1987,15 +2017,6 @@
   #define LEVELING_NOZZLE_TEMP 120   // (°C) Se aplica solo a E0 en este momento
   #define LEVELING_BED_TEMP     50
 #endif
-
-/**
- * Sensor de distancia de la cama
- *
- * Mide la distancia desde la cama hasta la boquilla con una precisión de 0.01 mm.
- * Para obtener información sobre este sensor, visita https://github.com/markniu/Bed_Distance_sensor
- * Usa el puerto I2C, por lo que requiere la biblioteca I2C markyue/Panda_SoftMasterI2C.
- */
-//#define BD_SENSOR
 
 /**
  * Habilita el registro detallado de G28, G29, M48, etc.
@@ -2074,7 +2095,7 @@
 #elif ENABLED(AUTO_BED_LEVELING_UBL)
 
   //===========================================================================
-  //========================= Nivelación de cama unificada ============================
+  //========================= Nivelación de cama unificada ====================
   //===========================================================================
 
   //#define MESH_EDIT_GFX_OVERLAY   // Mostrar una superposición gráfica al editar la malla
@@ -2175,12 +2196,6 @@
    */
   #define BED_TRAMMING_LEVELING_ORDER { LF, RF, RB, LB }
 #endif
-
-/**
- * Comandos para ejecutar al finalizar el sondeo G29.
- * Útil para retraer o mover la sonda Z fuera del camino.
- */
-//#define Z_PROBE_END_SCRIPT "G1 Z10 F12000\nG1 X15 Y330\nG1 Z0.5\nG1 Z10"
 
 // @section homing
 
@@ -3101,12 +3116,16 @@
  *  - Descarga https://github.com/InsanityAutomation/Marlin/raw/CrealityDwin_2.0/TM3D_Combined480272_Landscape_V7.7z
  *  - Copia la carpeta descargada DWIN_SET en la tarjeta SD.
  *
+ * E3S1PRO (T5L)
+ *  - Descargar https://github.com/CrealityOfficial/Ender-3S1/archive/3S1_Plus_Screen.zip
+ *  - Copiar la carpeta DWIN_SET descargada en la tarjeta SD.
  *
  * Flashear una pantalla DGUS en Marlin:
  *  - Formatea la tarjeta SD en FAT32 con un tamaño de asignación de 4 KB.
  *  - Descarga los archivos según se especifique para tu tipo de pantalla.
  *  - Conecta la tarjeta microSD en la parte trasera de la pantalla.
  *  - Inicia la pantalla y espera a que se complete la actualización.
+ * 
  * :[ 'ORIGIN', 'FYSETC', 'HYPRECY', 'MKS', 'RELOADED', 'IA_CREALITY' ]
  */
 //#define DGUS_LCD_UI ORIGIN
@@ -3291,7 +3310,18 @@
    */
   #define TFT_FONT  NOTOSANS
 
-  //#define TFT_SHARED_IO   // La E/S se comparte entre la pantalla TFT y otros dispositivos. Desactiva la transferencia de datos asíncrona.
+/**
+ * Tema TFT para Color_UI. Elije uno de los siguientes o añade uno nuevo al directorio 'Marlin/src/lcd/tft/themes'
+ *
+ * BLUE_MARLIN  - Tema predeterminado con fondo 'azul medianoche'
+ * BLACK_MARLIN - Tema con fondo 'negro'
+ * ANET_BLACK   - Tema utilizado para Anet ET4/5
+ */
+#define TFT_THEME BLACK_MARLIN
+
+//#define TFT_SHARED_IO   // La E/S se comparte entre la pantalla TFT y otros dispositivos. Desactiva la transferencia de datos asíncrona.
+
+#define COMPACT_MARLIN_BOOT_LOGO  // Utiliza datos comprimidos para ahorrar espacio en Flash
 #endif
 
 #if ENABLED(TFT_LVGL_UI)

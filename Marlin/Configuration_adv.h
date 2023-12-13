@@ -1250,11 +1250,6 @@
   #define XY_FREQUENCY_MIN_PERCENT 5 // (porcentaje) Porcentaje mínimo de FR para aplicar. Establecer con M201 G<min%>.
 #endif
 
-// Velocidad mínima del planificador en los cruces. Establece la velocidad mínima predeterminada que el planificador planifica para al final del búfer y en todas las paradas. 
-// Esto no debe ser mucho mayor que cero y solo debe cambiarse 
-//si se observa un comportamiento no deseado en la máquina del usuario al funcionar a velocidades muy lentas.
-#define MINIMUM_PLANNER_SPEED 0.05 // (mm/s)
-
 //
 // Compensación de juego mecánico (backlash)
 // Agrega movimiento adicional a los ejes en cambios de dirección para compensar el juego mecánico.
@@ -1516,10 +1511,25 @@
     //#define LCD_PRINTER_INFO_IS_BOOTSCREEN // Muestra pantallas de inicio en lugar de páginas de información de la impresora
   #endif
 
-  // Agrega movimientos de 50/100 mm a MarlinUI incluso con una cama más pequeña
-  //#define LARGE_MOVE_ITEMS
+/**
+ * Distancias del menú "Mover Eje" de MarlinUI. Lista separada por comas.
+ * Los valores se muestran tal como están definidos, así que siempre usa números simples aquí.
+ * Los movimientos de los ejes <= 1/2 de la longitud del eje y los movimientos del extrusor <= EXTRUDE_MAXLENGTH
+ * se mostrarán en los submenús de movimiento.
+ */
+#define MANUAL_MOVE_DISTANCE_MM                    10, 1.0, 0.1  // (mm)
+//#define MANUAL_MOVE_DISTANCE_MM         100, 50, 10, 1.0, 0.1  // (mm)
+//#define MANUAL_MOVE_DISTANCE_MM    500, 100, 50, 10, 1.0, 0.1  // (mm)
 
-  // Los elementos del menú BACK mantienen el resaltado en la parte superior
+// Distancias de movimiento manual para INCH_MODE_SUPPORT
+#define MANUAL_MOVE_DISTANCE_IN                          0.100, 0.010, 0.001  // (in)
+//#define MANUAL_MOVE_DISTANCE_IN          1.000, 0.500, 0.100, 0.010, 0.001  // (in)
+//#define MANUAL_MOVE_DISTANCE_IN   5.000, 1.000, 0.500, 0.100, 0.010, 0.001  // (in)
+
+// Distancias de movimiento manual para ejes de rotación
+#define MANUAL_MOVE_DISTANCE_DEG             90, 45, 22.5, 5, 1  // (°)
+
+// Los elementos del menú BACK mantienen el resaltado en la parte superior
   //#define TURBO_BACK_MENU_ITEM
 
   // Inserta un menú para precalentar en el nivel superior para permitir un acceso rápido
@@ -1562,7 +1572,11 @@
   //#define SOUND_MENU_ITEM   // Agregar una opción de silencio al menú LCD
   #define SOUND_ON_DEFAULT    // Estado predeterminado activado para el zumbador/altavoz
 
-  // Tiempo de espera para volver a la pantalla de estado desde los submenús
+#if HAS_WIRED_LCD
+  //#define DOUBLE_LCD_FRAMERATE        // No recomendado para placas lentas.
+#endif
+
+  // El tiempo de espera para volver a la pantalla de estado desde los submenús
   //#define LCD_TIMEOUT_TO_STATUS 15000   // (ms)
 
   // Desplaza un mensaje de estado más largo a la vista
@@ -1608,7 +1622,16 @@
 
 #endif // HAS_DISPLAY
 
-// Agregar 'M73' para establecer el progreso de la impresión, anula la estimación incorporada de Marlin
+#if HAS_FEEDRATE_EDIT
+  #define SPEED_EDIT_MIN    10  // (%) Rango mínimo de edición de porcentaje de velocidad de avance
+  #define SPEED_EDIT_MAX   999  // (%) Rango máximo de edición de porcentaje de velocidad de avance
+#endif
+#if HAS_FLOW_EDIT
+  #define FLOW_EDIT_MIN     10  // (%) Rango mínimo de edición de porcentaje de flujo
+  #define FLOW_EDIT_MAX    999  // (%) Rango máximo de edición de porcentaje de flujo
+#endif
+
+// Añadir 'M73' para establecer el progreso del trabajo de impresión, anula la estimación incorporada de Marlin
 //#define SET_PROGRESS_MANUALLY
 #if ENABLED(SET_PROGRESS_MANUALLY)
   #define SET_PROGRESS_PERCENT            // Agregar el parámetro 'P' para establecer el porcentaje completado
@@ -1967,7 +1990,10 @@
   //#define STATUS_ALT_BED_BITMAP     // Usar una imagen alternativa de la cama
   //#define STATUS_ALT_FAN_BITMAP     // Usar una imagen alternativa del ventilador
   //#define STATUS_FAN_FRAMES 3       // :[0,1,2,3,4] Número de cuadros de animación del ventilador
-  //#define STATUS_HEAT_PERCENT       // Mostrar el calentamiento en una barra de progreso
+
+  // Solo se puede habilitar una opción STATUS_HEAT_*
+//#define STATUS_HEAT_PERCENT       // Mostrar calentamiento en una barra de progreso
+//#define STATUS_HEAT_POWER         // Mostrar la potencia de salida del calentador como una barra vertical
 
   // Opciones de juegos frívolos
   //#define MARLIN_BRICKOUT
@@ -2015,7 +2041,23 @@
     #define DGUS_UI_WAITING_STATUS 10
     #define DGUS_UI_WAITING_STATUS_PERIOD 8 // Aumentar para ralentizar el bucle de estado de espera
   #endif
-#endif
+
+  #elif DGUS_UI_IS(E3S1PRO)
+  /**
+   * El firmware de la pantalla estándar de Ender-3 S1 Pro/Plus tiene un manejo de archivos SD bastante deficiente.
+   *
+   * El desplazamiento automático es principalmente útil para mensajes de estado, nombres de archivos y la página "Acerca de".
+   *
+   * NOTA: La opción de tarjeta SD avanzada se ve afectada por el firmware táctil estándar, por lo que
+   *       las páginas 5 en adelante mostrarán "4/4". Esto puede solucionarse en una actualización de firmware de pantalla.
+   */
+  #define DGUS_SOFTWARE_AUTOSCROLL        // Habilitar el desplazamiento automático de texto largo
+  #define DGUS_AUTOSCROLL_START_CYCLES 1  // Ciclos de actualización sin desplazamiento al principio de las cadenas de texto
+  #define DGUS_AUTOSCROLL_END_CYCLES 1    // ... al final de las cadenas de texto
+
+  #define DGUS_ADVANCED_SDCARD            // Permitir más de 20 archivos y navegar por directorios
+  #define DGUS_USERCONFIRM                // Reutilizar la página de la tarjeta SD para mostrar varios mensajes
+  #endif
 #endif // HAS_DGUS_LCD
 
 //
@@ -2157,6 +2199,15 @@
 #endif
 
 //
+// Tiempo de espera de retroiluminación LCD
+// Requiere una pantalla con retroiluminación controlable
+//
+//#define LCD_BACKLIGHT_TIMEOUT_MINS 1  // (minutos) Tiempo de espera antes de apagar la retroiluminación
+#if defined(DISPLAY_SLEEP_MINUTES) || defined(LCD_BACKLIGHT_TIMEOUT_MINS)
+  #define EDITABLE_DISPLAY_TIMEOUT      // Editar el tiempo de espera con M255 S<minutos> y un elemento de menú
+#endif
+
+//
 // Debounce del botón ADC
 //
 #if HAS_ADC_BUTTONS
@@ -2248,6 +2299,14 @@
   //#define ALLOW_LOW_EJERK       // Permitir un valor DEFAULT_EJERK de <10. Recomendado para hotends de extrusión directa.
   //#define EXPERIMENTAL_I2S_LA   // Permitir el uso de I2S_STEPPER_STREAM con LA. El rendimiento se degrada a medida que la velocidad de paso de LA alcanza ~20 kHz.
 #endif
+
+/**
+ * Control No Lineal de Extrusión
+ *
+ * Controla la tasa de extrusión basada en la velocidad instantánea del extrusor. Puede usarse para corregir
+ * la subextrusión a altas velocidades de extrusor que, de lo contrario, son bien comportadas (es decir, que no se saltan).
+ */
+//#define NONLINEAR_EXTRUSION
 
 // @section leveling
 
@@ -2449,6 +2508,8 @@
   #define G38_MINIMUM_MOVE 0.0275 // (mm) Distancia mínima que producirá un movimiento.
 #endif
 
+// @section movimientos
+
 // Los movimientos (o segmentos) con menos pasos que esto se unirán al siguiente movimiento
 #define MIN_STEPS_PER_SEGMENT 6
 
@@ -2606,6 +2667,15 @@
 //#define SERIAL_FLOAT_PRECISION 4
 
 /**
+ * Esta característica es EXPERIMENTAL, así que úsala con precaución y pruébala a fondo.
+ * Habilita esta opción para recibir datos en los puertos serie a través del controlador DMA incorporado
+ * para una comunicación serie de alta velocidad más estable y confiable.
+ * Actualmente, solo algunos MCUs STM32 son compatibles.
+ * Nota: Esto no tiene efecto en los puertos serie USB emulados.
+ */
+//#define SERIAL_DMA
+
+/**
  * Establece el número de espacios de fuente proporcional necesarios para llenar un espacio de caracter típico.
  * Esto puede ayudar a alinear mejor la salida de comandos como `G29 O` Mesh Output.
  *
@@ -2739,8 +2809,22 @@
      *   - Cambiar a una boquilla diferente en caso de obstrucción del extrusor
      */
     #define TOOLCHANGE_MIGRATION_FEATURE
+    #if ENABLED(TOOLCHANGE_MIGRATION_FEATURE)
+  // Anular configuraciones de cambio de herramienta
+  // Por defecto, la migración de herramientas utiliza configuraciones regulares de cambio de herramienta.
+  // Con una torre de purga, el intercambio/primer y purgado de herramientas ocurren dentro de la cama.
+  // Al migrar a una nueva herramienta no purgada, puedes establecer valores de anulación a continuación.
+  //#define MIGRATION_ZRAISE            0 // (mm)
 
+  // Mayor longitud de purga para limpiar
+  //#define MIGRATION_FS_EXTRA_PRIME    0 // (mm) Longitud de purga adicional
+  //#define MIGRATION_FS_WIPE_RETRACT   0 // (mm) Retraer antes del enfriamiento para menos hilos, mejor limpieza, etc.
+
+  // Enfriar después de la purga para reducir hilos
+  //#define MIGRATION_FS_FAN_SPEED    255 // 0-255
+  //#define MIGRATION_FS_FAN_TIME       0 // (segundos)
   #endif
+#endif
 
   /**
    * Posición para aparcar el cabezal durante el cambio de herramienta.
@@ -2752,6 +2836,9 @@
     #define TOOLCHANGE_PARK_XY_FEEDRATE 6000  // (mm/min)
     //#define TOOLCHANGE_PARK_X_ONLY          // Movimiento solo en el eje X
     //#define TOOLCHANGE_PARK_Y_ONLY          // Movimiento solo en el eje Y
+    #if ENABLED(TOOLCHANGE_MIGRATION_FEATURE)
+      //#define TOOLCHANGE_MIGRATION_DO_PARK  // Forzar estacionamiento (o no estacionamiento) en la migración
+    #endif
   #endif
 #endif // HAS_MULTI_EXTRUDER
 
@@ -3527,6 +3614,7 @@
     #endif
 
   #else
+
     #if ENABLED(SPINDLE_LASER_USE_PWM)
       #define SPEED_POWER_INTERCEPT       0    // (%) 0-100 es decir, Porcentaje mínimo de potencia
       #define SPEED_POWER_MIN             0    // (%) 0-100
@@ -3787,6 +3875,7 @@
      * Un valor distinto de cero activa la limitación de extrusión basada en el volumen.
      */
     #define DEFAULT_VOLUMETRIC_EXTRUDER_LIMIT 0.00      // (mm^3/seg)
+    #define VOLUMETRIC_EXTRUDER_LIMIT_MAX     20        // (mm^3/sec)
   #endif
 #endif
 
@@ -3821,11 +3910,14 @@
 /**
  * Habilita esta opción para una compilación más liviana de Marlin que elimina todos
  * los desplazamientos del espacio de trabajo, simplificando las transformaciones de coordenadas, nivelación, etc.
- *
- *  - M206 y M428 están deshabilitados.
  *  - G92 volverá a su comportamiento de Marlin 1.0.
  */
 //#define NO_WORKSPACE_OFFSETS
+
+/**
+ * Desactivar M206 y M428 si no necesitas compensación en el origen.
+ */
+//#define NO_HOME_OFFSETS
 
 /**
  * Opciones de G-code CNC
@@ -4204,9 +4296,13 @@
 //#define WIFISUPPORT         // Gestión de WiFi integrada en Marlin
 //#define ESP3D_WIFISUPPORT   // Gestión de WiFi con la biblioteca ESP3D (https://github.com/luc-github/ESP3DLib)
 
-#if ANY(WIFISUPPORT, ESP3D_WIFISUPPORT)
-  //#define WEBSUPPORT          // Iniciar un servidor web (que puede incluir el descubrimiento automático)
-  //#define OTASUPPORT          // Soporte para actualizaciones de firmware a través de WiFi
+/**
+ * Extras para una placa base basada en ESP32 con WIFISUPPORT
+ * Estas opciones no se aplican a módulos WiFi adicionales basados en ESP32 WiFi101.
+ */
+#if ENABLED(WIFISUPPORT)
+  //#define WEBSUPPORT          // Iniciar un servidor web (que puede incluir auto-detección) usando SPIFFS
+  //#define OTASUPPORT          // Soporte para actualizaciones de firmware por aire
   //#define WIFI_CUSTOM_COMMAND // Aceptar comandos de configuración de funciones (por ejemplo, WiFi ESP3D) desde el host
 
   /**

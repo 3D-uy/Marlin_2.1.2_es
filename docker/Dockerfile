@@ -1,24 +1,26 @@
+# Desde la imagen de Python 3.9.0-buster
 FROM python:3.9.0-buster
 
-# Disable warnings about not having a TTY
+# Desactivar advertencias sobre la falta de un TTY
 ARG DEBIAN_FRONTEND=noninteractive
 
-# Disable debconf warnings
+# Desactivar advertencias de debconf
 ARG DEBCONF_NOWARNINGS="yes"
 
-# Upgrade pip
+# Actualizar pip
 RUN pip install --upgrade pip
 
-# Install platformio toolchain / framework and pyyaml
+# Instalar la cadena de herramientas y el marco de trabajo de platformio y pyyaml
 RUN pip install -U platformio PyYaml
 
-# Upgrade platformio using development version / branch
+# Actualizar platformio usando la versión / rama de desarrollo
 RUN pio upgrade --dev
 
-# Set working directory
+# Establecer el directorio de trabajo
 WORKDIR /code
 
-# Set volumes / mount points that we are using
+# Establecer volúmenes / puntos de montaje que estamos utilizando
 VOLUME /code /root/.platformio
 
-#ENV PATH /code/buildroot/bin/:/code/buildroot/tests/:${PATH}
+# Configurar la variable de entorno PATH
+# ENV PATH /code/buildroot/bin/:/code/buildroot/tests/:${PATH}
