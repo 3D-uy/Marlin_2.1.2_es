@@ -171,7 +171,7 @@
   #define LCD_READ_ID                       0xD3
   #define LCD_USE_DMA_SPI
 
-  #define TFT_BUFFER_SIZE                   9600
+  #define TFT_BUFFER_WORDS                  9600
 
 #elif HAS_WIRED_LCD
   #define BEEPER_PIN                 EXP1_01_PIN
@@ -235,7 +235,7 @@
       //  #define NEOPIXEL_PIN       EXP1_06_PIN
       //#endif
 
-    #else                                         // !FYSETC_MINI_12864
+    #else // !FYSETC_MINI_12864
 
       #define LCD_PINS_D4            EXP1_05_PIN
       #if IS_ULTIPANEL

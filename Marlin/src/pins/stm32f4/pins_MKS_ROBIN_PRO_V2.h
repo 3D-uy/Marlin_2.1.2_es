@@ -336,7 +336,7 @@
   #define LCD_USE_DMA_SPI
 
   //#define TFT_DRIVER                    ST7796
-  #define TFT_BUFFER_SIZE                  14400
+  #define TFT_BUFFER_WORDS                 14400
 
 #elif HAS_WIRED_LCD
 
@@ -360,7 +360,7 @@
     // Required for MKS_MINI_12864 with this board
     //#define MKS_LCD12864B
 
-  #else                                           // !MKS_MINI_12864
+  #else // !MKS_MINI_12864
 
     #define LCD_PINS_D4              EXP1_05_PIN
     #if IS_ULTIPANEL

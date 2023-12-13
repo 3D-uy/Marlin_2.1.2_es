@@ -156,7 +156,7 @@ void GT911::read_reg(uint16_t reg, uint8_t reg_len, uint8_t* r_data, uint8_t r_l
   sw_iic.stop();
 }
 
-void GT911::Init() {
+void GT911::init() {
   OUT_WRITE(GT911_RST_PIN, LOW);
   OUT_WRITE(GT911_INT_PIN, LOW);
   delay(11);
@@ -189,8 +189,8 @@ bool GT911::getFirstTouchPoint(int16_t *x, int16_t *y) {
   return false;
 }
 
-bool GT911::getPoint(int16_t *x, int16_t *y) {
-  static bool touched = 0;
+bool GT911::getRawPoint(int16_t * const x, int16_t * const y) {
+  static bool touched = false;
   static int16_t read_x = 0, read_y = 0;
   static millis_t next_time = 0;
 

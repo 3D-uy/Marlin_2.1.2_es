@@ -94,13 +94,15 @@ int pf_bsearch_r(void *userdata, size_t num_data, pf_bsearch_cb_comp_t cb_comp, 
   return -1;
 }
 
-/* Returns true if passed byte is first byte of UTF-8 char sequence */
+// Is the passed byte the first byte of a UTF-8 char sequence?
 static inline bool utf8_is_start_byte_of_char(const uint8_t b) {
   return 0x80 != (b & 0xC0);
 }
 
-/* This function gets the character at the pstart position, interpreting UTF8 multibyte sequences
-   and returns the pointer to the next character */
+/**
+ * Get the character at pstart, interpreting UTF8 multibyte sequences.
+ * Return the pointer to the next character.
+ */
 const uint8_t* get_utf8_value_cb(const uint8_t *pstart, read_byte_cb_t cb_read_byte, lchar_t &pval) {
   uint32_t val = 0;
   const uint8_t *p = pstart;
@@ -177,13 +179,8 @@ static inline uint8_t utf8_strlen_cb(const char *pstart, read_byte_cb_t cb_read_
   return cnt;
 }
 
-uint8_t utf8_strlen(const char *pstart) {
-  return utf8_strlen_cb(pstart, read_byte_ram);
-}
-
-uint8_t utf8_strlen_P(PGM_P pstart) {
-  return utf8_strlen_cb(pstart, read_byte_rom);
-}
+uint8_t utf8_strlen(const char *pstart) { return utf8_strlen_cb(pstart, read_byte_ram); }
+uint8_t utf8_strlen_P(PGM_P pstart) { return utf8_strlen_cb(pstart, read_byte_rom); }
 
 static inline uint8_t utf8_byte_pos_by_char_num_cb(const char *pstart, read_byte_cb_t cb_read_byte, const uint8_t charnum) {
   uint8_t *p = (uint8_t *)pstart;

@@ -1,6 +1,7 @@
 name: 🪲 Informar un error
 description: Crea un informe de error para ayudar a mejorar Marlin Firmware
 title: "[BUG] (resumen del error)"
+labels: ["Bug: Potential ?"]
 body:
   - type: markdown
     attributes:
@@ -106,6 +107,11 @@ body:
     attributes:
       label: Electrónica
       description: ¿Electrónica original, placa de actualización u otra?
+
+    - type: input
+    attributes:
+      label: LCD/Controller
+      description:Algunos comportamientos de Marlin están determinados por el controlador. Describe el modelo y la versión de tu pantalla/controlador LCD.
 
   - type: input
     attributes:

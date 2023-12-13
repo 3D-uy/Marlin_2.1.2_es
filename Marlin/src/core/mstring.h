@@ -48,7 +48,7 @@
   #define DEFAULT_MSTRING_SIZE 20
 #endif
 
-//#define UNSAFE_MSTRING  // Don't initialize the string and don't terminate strncpy
+//#define UNSAFE_MSTRING  // Don't initialize the string to "" or set a terminating nul
 //#define USE_SPRINTF     // Use sprintf instead of snprintf
 //#define DJB2_HASH       // 32-bit hash with Djb2 algorithm
 //#define MSTRING_DEBUG   // Debug string operations to diagnose memory leaks
@@ -68,6 +68,13 @@ extern void SERIAL_CHAR(char c);
 #else
   #define SNPRINTF(V...)   snprintf(V)
   #define SNPRINTF_P(V...) snprintf_P(V)
+#endif
+
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+
+#if DISABLED(UNSAFE_MSTRING) && GCC_VERSION >= 80000
+  #pragma GCC diagnostic ignored "-Wstringop-truncation"
 #endif
 
 /**
@@ -91,13 +98,7 @@ public:
 
   void debug(FSTR_P const f) {
     #if ENABLED(MSTRING_DEBUG)
-      SERIAL_ECHO(FTOP(f));
-      SERIAL_CHAR(':');
-      SERIAL_ECHO(uintptr_t(str));
-      SERIAL_CHAR(' ');
-      SERIAL_ECHO(length());
-      SERIAL_CHAR(' ');
-      SERIAL_ECHOLN(str);
+      SERIAL_ECHOLN(f, ':', uintptr_t(str), ' ', length(), ' ', str);
     #endif
   }
 
@@ -105,13 +106,13 @@ public:
 
   // Chainable String Setters
   MString& set()                          { str[0] = '\0';                            debug(F("clear"));   return *this; }
-  MString& set(char *s)                   { strncpy(str, s, SIZE);                    debug(F("string"));  return *this; }
+  MString& set(char *s)                   { strlcpy(str, s, SIZE + 1);                debug(F("string"));  return *this; }
   MString& set(const char *s)             { return set(const_cast<char*>(s)); }
-  MString& set_P(PGM_P const s)           { strncpy_P(str, s, SIZE);                  debug(F("pstring")); return *this; }
+  MString& set_P(PGM_P const s)           { strlcpy_P(str, s, SIZE + 1);              debug(F("pstring")); return *this; }
   MString& set(FSTR_P const f)            { return set_P(FTOP(f)); }
-  MString& set(const MString &s)          { strncpy(str, s.str, SIZE);                debug(F("MString")); return *this; }
   MString& set(const bool &b)             { return set(b ? F("true") : F("false")); }
-  MString& set(const char c)              { str[0] = c; if (1 < SIZE) str[1] = '\0';  debug(F("char"));    return *this; }
+  MString& set(const char c)              { str[0] = c; str[1] = '\0';                debug(F("char"));    return *this; }
+  MString& set(const int8_t &i)           { SNPRINTF_P(str, SIZE, PSTR("%d"),  i);    debug(F("int8_t"));  return *this; }
   MString& set(const short &i)            { SNPRINTF_P(str, SIZE, PSTR("%d"),  i);    debug(F("short"));   return *this; }
   MString& set(const int &i)              { SNPRINTF_P(str, SIZE, PSTR("%d"),  i);    debug(F("int"));     return *this; }
   MString& set(const long &l)             { SNPRINTF_P(str, SIZE, PSTR("%ld"), l);    debug(F("long"));    return *this; }
@@ -126,9 +127,12 @@ public:
   MString& set(const xyz_pos_t &v)        { set(); return append(v); }
   MString& set(const xyze_pos_t &v)       { set(); return append(v); }
 
-  MString& setn(char *s, int len)         { int c = _MIN(len, SIZE); strncpy(str, s, c); str[c] = '\0'; debug(F("string")); return *this; }
+  template <int S>
+  MString& set(const MString<S> &m)       { strlcpy(str, &m, SIZE + 1); debug(F("MString")); return *this; }
+
+  MString& setn(char *s, int len)         { int c = _MIN(len, SIZE); strlcpy(str, s, c + 1); debug(F("string")); return *this; }
   MString& setn(const char *s, int len)   { return setn(const_cast<char*>(s), len); }
-  MString& setn_P(PGM_P const s, int len) { int c = _MIN(len, SIZE); strncpy_P(str, s, c); str[c] = '\0'; debug(F("pstring")); return *this; }
+  MString& setn_P(PGM_P const s, int len) { int c = _MIN(len, SIZE); strlcpy_P(str, s, c + 1); debug(F("pstring")); return *this; }
   MString& setn(FSTR_P const f, int len)  { return setn_P(FTOP(f), len); }
 
   // set(repchr_t('-', 10))
@@ -149,14 +153,14 @@ public:
 
   // Chainable String appenders
   MString& append()                           { debug(F("nil")); return *this; } // for macros that might emit no output
-  MString& append(char *s)                    { int sz = length(); if (sz < SIZE) strncpy(str + sz, s, SIZE - sz); debug(F("string")); return *this; }
+  MString& append(char *s)                    { int sz = length(); if (sz < SIZE) strlcpy(str + sz, s, SIZE - sz + 1); debug(F("string")); return *this; }
   MString& append(const char *s)              { return append(const_cast<char *>(s)); }
-  MString& append_P(PGM_P const s)            { int sz = length(); if (sz < SIZE) strncpy_P(str + sz, s, SIZE - sz); debug(F("pstring")); return *this; }
+  MString& append_P(PGM_P const s)            { int sz = length(); if (sz < SIZE) strlcpy_P(str + sz, s, SIZE - sz + 1); debug(F("pstring")); return *this; }
   MString& append(FSTR_P const f)             { return append_P(FTOP(f)); }
-  MString& append(const MString &s)           { return append(s.str); }
   MString& append(const bool &b)              { return append(b ? F("true") : F("false")); }
   MString& append(const char c)               { int sz = length(); if (sz < SIZE) { str[sz] = c; if (sz < SIZE - 1) str[sz + 1] = '\0'; } return *this; }
   #if ENABLED(FASTER_APPEND)
+    MString& append(const int8_t &i)          { int sz = length(); SNPRINTF(&str[sz], SIZE - sz, "%d",  i); return *this; }
     MString& append(const short &i)           { int sz = length(); SNPRINTF(&str[sz], SIZE - sz, "%d",  i); return *this; }
     MString& append(const int &i)             { int sz = length(); SNPRINTF(&str[sz], SIZE - sz, "%d",  i); return *this; }
     MString& append(const long &l)            { int sz = length(); SNPRINTF(&str[sz], SIZE - sz, "%ld", l); return *this; }
@@ -165,13 +169,14 @@ public:
     MString& append(const unsigned int &i)    { int sz = length(); SNPRINTF(&str[sz], SIZE - sz, "%u",  i); return *this; }
     MString& append(const unsigned long &l)   { int sz = length(); SNPRINTF(&str[sz], SIZE - sz, "%lu", l); return *this; }
   #else
-    MString& append(const short &i)           { char buf[20]; sprintf(buf, "%d",  i); return append(buf); }
-    MString& append(const int &i)             { char buf[20]; sprintf(buf, "%d",  i); return append(buf); }
-    MString& append(const long &l)            { char buf[20]; sprintf(buf, "%ld", l); return append(buf); }
-    MString& append(const unsigned char &i)   { char buf[20]; sprintf(buf, "%u",  i); return append(buf); }
-    MString& append(const unsigned short &i)  { char buf[20]; sprintf(buf, "%u",  i); return append(buf); }
-    MString& append(const unsigned int &i)    { char buf[20]; sprintf(buf, "%u",  i); return append(buf); }
-    MString& append(const unsigned long &l)   { char buf[20]; sprintf(buf, "%lu", l); return append(buf); }
+    MString& append(const int8_t &i)          { char buf[ 5]; sprintf(buf, "%d",  i); return append(buf); }
+    MString& append(const short &i)           { char buf[12]; sprintf(buf, "%d",  i); return append(buf); }
+    MString& append(const int &i)             { char buf[12]; sprintf(buf, "%d",  i); return append(buf); }
+    MString& append(const long &l)            { char buf[12]; sprintf(buf, "%ld", l); return append(buf); }
+    MString& append(const unsigned char &i)   { char buf[ 5]; sprintf(buf, "%u",  i); return append(buf); }
+    MString& append(const unsigned short &i)  { char buf[11]; sprintf(buf, "%u",  i); return append(buf); }
+    MString& append(const unsigned int &i)    { char buf[11]; sprintf(buf, "%u",  i); return append(buf); }
+    MString& append(const unsigned long &l)   { char buf[11]; sprintf(buf, "%lu", l); return append(buf); }
   #endif
   MString& append(const float &f)             { return append(p_float_t(f, SERIAL_FLOAT_PRECISION)); }
   MString& append(const p_float_t &pf)        { return append(w_float_t(pf.value, 1, pf.prec)); }
@@ -180,16 +185,19 @@ public:
   MString& append(const xyz_pos_t &v)         { LOOP_NUM_AXES(i)     { if (i) append(' '); append(AXIS_CHAR(i), v[i]); } debug(F("xyz")); return *this; }
   MString& append(const xyze_pos_t &v)        { LOOP_LOGICAL_AXES(i) { if (i) append(' '); append(AXIS_CHAR(i), v[i]); } debug(F("xyze")); return *this; }
 
+  template<int S>
+  MString& append(const MString<S> &m)        { return append(&m); }
+
   // Append only if the given space is available
-  MString& appendn(char *s, int len)          { int sz = length(), c = _MIN(len, SIZE - sz); if (c > 0) { strncpy(str + sz, s, c); str[sz + c] = '\0'; } debug(F("string")); return *this; }
+  MString& appendn(char *s, int len)          { int sz = length(), c = _MIN(len, SIZE - sz); if (c > 0) { strlcpy(str + sz, s, c + 1); } debug(F("string")); return *this; }
   MString& appendn(const char *s, int len)    { return appendn(const_cast<char *>(s), len); }
-  MString& appendn_P(PGM_P const s, int len)  { int sz = length(), c = _MIN(len, SIZE - sz); if (c > 0) { strncpy_P(str + sz, s, c); str[sz + c] = '\0'; } debug(F("pstring")); return *this; }
+  MString& appendn_P(PGM_P const s, int len)  { int sz = length(), c = _MIN(len, SIZE - sz); if (c > 0) { strlcpy_P(str + sz, s, c + 1); } debug(F("pstring")); return *this; }
   MString& appendn(FSTR_P const f, int len)   { return appendn_P(FTOP(f), len); }
 
   // append(repchr_t('-', 10))
   MString& append(const repchr_t &s) {
     const int sz = length(), c = _MIN(s.count, SIZE - sz);
-    if (c > 0) { memset(str + sz, s.asc, c); safety(sz + c); }
+    if (c > 0) { memset(str + sz, s.asc, c); str[sz + c] = '\0'; }
     debug(F("repchr"));
     return *this;
   }
@@ -219,6 +227,9 @@ public:
   // Instantiate with a list of things
   template <typename T, typename... Args>
   MString(T arg1, Args... more)           { set(arg1); append(more...); }
+
+  // Catch unhandled types to prevent infinite recursion
+  template<typename T> MString& append(T) { return append(TERN(MSTRING_DEBUG, typeid(T).name(), '?')); }
 
   // Take a list of any number of arguments and append them to the string
   template<typename T, typename... Args>
@@ -282,7 +293,7 @@ public:
   }
 
   void copyto(char * const dst) const { strcpy(dst, str); }
-  void copyto(char * const dst, int len) const { strncpy(dst, str, len); }
+  void copyto(char * const dst, int len) const { strlcpy(dst, str, len + 1); }
 
   MString& clear() { return set(); }
   MString& eol() { return append('\n'); }
@@ -299,7 +310,11 @@ public:
 
 };
 
+#pragma GCC diagnostic pop
+
+// Temporary inline string typically used to compose a G-code command
 #ifndef TS_SIZE
   #define TS_SIZE 63
 #endif
-#define TS(V...) MString<TS_SIZE>(V)
+typedef MString<TS_SIZE, DISABLED(UNSAFE_MSTRING)> TString;
+#define TS(V...) TString(V)

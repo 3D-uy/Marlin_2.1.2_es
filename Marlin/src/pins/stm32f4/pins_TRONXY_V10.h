@@ -157,7 +157,7 @@
 #define FAN2_PIN                            PG9   // FAN2
 #define FAN3_PIN                            PF10  // FAN3
 #define CONTROLLER_FAN_PIN                  PD7   // BOARD FAN
-#define FAN_SOFT_PWM
+#define FAN_SOFT_PWM_REQUIRED
 
 //
 // Laser / Spindle
@@ -209,7 +209,7 @@
   //#define TFT_PIXEL_OFFSET_X                48
   //#define TFT_PIXEL_OFFSET_Y                32
   //#define TFT_DRIVER                   ILI9488
-  //#define TFT_BUFFER_SIZE                14400
+  //#define TFT_BUFFER_WORDS               14400
 
   #if NEED_TOUCH_PINS
     #define TOUCH_CS_PIN                    PD11  // SPI1_NSS

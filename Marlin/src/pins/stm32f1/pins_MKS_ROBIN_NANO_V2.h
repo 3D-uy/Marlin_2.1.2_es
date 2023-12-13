@@ -305,7 +305,7 @@
   #define BTN_EN1                           PE8
   #define BTN_EN2                           PE11
 #elif ENABLED(TFT_COLOR_UI)
-  #define TFT_BUFFER_SIZE                  14400
+  #define TFT_BUFFER_WORDS                 14400
 #endif
 
 #if HAS_WIRED_LCD && !HAS_SPI_TFT
@@ -356,7 +356,7 @@
     #endif
     //#define LCD_SCREEN_ROTATE              180  // 0, 90, 180, 270
 
-  #else                                           // !MKS_MINI_12864
+  #else // !MKS_MINI_12864
 
     #define LCD_PINS_D4                     PE14
     #if IS_ULTIPANEL

@@ -1,36 +1,35 @@
+// Este directorio está destinado para las bibliotecas específicas del proyecto (privadas).
+// PlatformIO las compilará como bibliotecas estáticas y las vinculará al archivo ejecutable.
 
-This directory is intended for the project specific (private) libraries.
-PlatformIO will compile them to static libraries and link to executable file.
+// El código fuente de cada biblioteca debe ubicarse en un directorio separado, por ejemplo,
+// "lib/private_lib/[aquí van los archivos fuente]".
 
-The source code of each library should be placed in separate directory, like
-"lib/private_lib/[here are source files]".
-
-For example, see how can be organized `Foo` and `Bar` libraries:
+// Por ejemplo, vea cómo pueden organizarse las bibliotecas `Foo` y `Bar`:
 
 |--lib
 |  |--Bar
 |  |  |--docs
-|  |  |--examples
+|  |  |--ejemplos
 |  |  |--src
 |  |     |- Bar.c
 |  |     |- Bar.h
 |  |--Foo
 |  |  |- Foo.c
 |  |  |- Foo.h
-|  |- readme.txt --> THIS FILE
+|  |- readme.txt --> ESTE ARCHIVO
 |- platformio.ini
 |--src
    |- main.c
 
-Then in `src/main.c` you should use:
+// Luego, en `src/main.c` deberías usar:
 
 #include <Foo.h>
 #include <Bar.h>
 
-// rest H/C/CPP code
+// resto del código H/C/CPP
 
-PlatformIO will find your libraries automatically, configure preprocessor's
-include paths and build them.
+// PlatformIO encontrará tus bibliotecas automáticamente, configurará las rutas de inclusión del preprocesador
+// y las compilará.
 
-More information about PlatformIO Library Dependency Finder
-- https://docs.platformio.org/page/librarymanager/ldf.html
+// Más información sobre el Localizador de Dependencias de Bibliotecas de PlatformIO
+// - https://docs.platformio.org/page/librarymanager/ldf.html

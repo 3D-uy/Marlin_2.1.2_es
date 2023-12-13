@@ -36,7 +36,7 @@
  */
 
 // Change EEPROM version if the structure changes
-#define EEPROM_VERSION "V88"
+#define EEPROM_VERSION "V89"
 #define EEPROM_OFFSET 100
 
 // Check the integrity of data offsets.
@@ -176,6 +176,10 @@
 #if DGUS_LCD_UI_MKS
   #include "../lcd/extui/dgus/DGUSScreenHandler.h"
   #include "../lcd/extui/dgus/DGUSDisplayDef.h"
+#endif
+
+#if ENABLED(HOTEND_IDLE_TIMEOUT)
+  #include "../feature/hotend_idle.h"
 #endif
 
 #pragma pack(push, 1) // No padding between variables
@@ -427,10 +431,12 @@ typedef struct SettingsDataStruct {
   //
   // Display Sleep
   //
-  #if LCD_BACKLIGHT_TIMEOUT_MINS
-    uint8_t backlight_timeout_minutes;                  // M255 S
-  #elif HAS_DISPLAY_SLEEP
-    uint8_t sleep_timeout_minutes;                      // M255 S
+  #if ENABLED(EDITABLE_DISPLAY_TIMEOUT)
+    #if HAS_BACKLIGHT_TIMEOUT
+      uint8_t backlight_timeout_minutes;                // M255 S
+    #elif HAS_DISPLAY_SLEEP
+      uint8_t sleep_timeout_minutes;                    // M255 S
+    #endif
   #endif
 
   //
@@ -535,7 +541,7 @@ typedef struct SettingsDataStruct {
   #if ENABLED(DWIN_LCD_PROUI)
     uint8_t dwin_data[eeprom_data_size];
   #elif ENABLED(DWIN_CREALITY_LCD_JYERSUI)
-    uint8_t dwin_settings[CrealityDWIN.eeprom_data_size];
+    uint8_t dwin_settings[jyersDWIN.eeprom_data_size];
   #endif
 
   //
@@ -608,7 +614,7 @@ typedef struct SettingsDataStruct {
   // Fixed-Time Motion
   //
   #if ENABLED(FT_MOTION)
-    ft_config_t fxdTiCtrl_cfg;                          // M493
+    ft_config_t ftMotion_cfg;                          // M493
   #endif
 
   //
@@ -621,6 +627,20 @@ typedef struct SettingsDataStruct {
   #if ENABLED(INPUT_SHAPING_Y)
     float shaping_y_frequency,                          // M593 Y F
           shaping_y_zeta;                               // M593 Y D
+  #endif
+
+  //
+  // HOTEND_IDLE_TIMEOUT
+  //
+  #if ENABLED(HOTEND_IDLE_TIMEOUT)
+    hotend_idle_settings_t hotend_idle_config;          // M86 S T E B
+  #endif
+
+  //
+  // Nonlinear Extrusion
+  //
+  #if ENABLED(NONLINEAR_EXTRUSION)
+    ne_coeff_t stepper_ne;                              // M592 A B C
   #endif
 
 } SettingsData;
@@ -659,10 +679,7 @@ void MarlinSettings::postprocess() {
   #endif
 
   // Software endstops depend on home_offset
-  LOOP_NUM_AXES(i) {
-    update_workspace_offset((AxisEnum)i);
-    update_software_endstops((AxisEnum)i);
-  }
+  LOOP_NUM_AXES(i) update_software_endstops((AxisEnum)i);
 
   TERN_(ENABLE_LEVELING_FADE_HEIGHT, set_z_fade_height(new_z_fade_height, false)); // false = no report
 
@@ -689,12 +706,8 @@ void MarlinSettings::postprocess() {
   // Moved as last update due to interference with Neopixel init
   TERN_(HAS_LCD_CONTRAST, ui.refresh_contrast());
   TERN_(HAS_LCD_BRIGHTNESS, ui.refresh_brightness());
-
-  #if LCD_BACKLIGHT_TIMEOUT_MINS
-    ui.refresh_backlight_timeout();
-  #elif HAS_DISPLAY_SLEEP
-    ui.refresh_screen_timeout();
-  #endif
+  TERN_(HAS_BACKLIGHT_TIMEOUT, ui.refresh_backlight_timeout());
+  TERN_(HAS_DISPLAY_SLEEP, ui.refresh_screen_timeout());
 }
 
 #if ALL(PRINTCOUNTER, EEPROM_SETTINGS)
@@ -750,7 +763,7 @@ void MarlinSettings::postprocess() {
 
 #if ENABLED(EEPROM_SETTINGS)
 
-  #define EEPROM_ASSERT(TST,ERR)  do{ if (!(TST)) { SERIAL_ERROR_MSG(ERR); eeprom_error = ERR_EEPROM_SIZE; } }while(0)
+  #define EEPROM_ASSERT(TST,ERR)  do{ if (!(TST)) { SERIAL_WARN_MSG(ERR); eeprom_error = ERR_EEPROM_SIZE; } }while(0)
 
   #define TWO_BYTE_HASH(A,B) uint16_t((uint16_t(A ^ 0xC3) << 4) ^ (uint16_t(B ^ 0xC3) << 12))
 
@@ -788,7 +801,7 @@ void MarlinSettings::postprocess() {
 
   EEPROM_Error MarlinSettings::size_error(const uint16_t size) {
     if (size != datasize()) {
-      DEBUG_ERROR_MSG("EEPROM datasize error."
+      DEBUG_WARN_MSG("EEPROM datasize error."
         #if ENABLED(MARLIN_DEV_MODE)
           " (Actual:", size, " Expected:", datasize(), ")"
         #endif
@@ -803,7 +816,7 @@ void MarlinSettings::postprocess() {
    */
   bool MarlinSettings::save() {
     float dummyf = 0;
-    char ver[4] = "ERR";
+    MString<3> ver(F("ERR"));
 
     if (!EEPROM_START(EEPROM_OFFSET)) return false;
 
@@ -1234,10 +1247,12 @@ void MarlinSettings::postprocess() {
     //
     // LCD Backlight / Sleep Timeout
     //
-    #if LCD_BACKLIGHT_TIMEOUT_MINS
-      EEPROM_WRITE(ui.backlight_timeout_minutes);
-    #elif HAS_DISPLAY_SLEEP
-      EEPROM_WRITE(ui.sleep_timeout_minutes);
+    #if ENABLED(EDITABLE_DISPLAY_TIMEOUT)
+      #if HAS_BACKLIGHT_TIMEOUT
+        EEPROM_WRITE(ui.backlight_timeout_minutes);
+      #elif HAS_DISPLAY_SLEEP
+        EEPROM_WRITE(ui.sleep_timeout_minutes);
+      #endif
     #endif
 
     //
@@ -1599,7 +1614,7 @@ void MarlinSettings::postprocess() {
     {
       _FIELD_TEST(dwin_data);
       char dwin_data[eeprom_data_size] = { 0 };
-      DWIN_CopySettingsTo(dwin_data);
+      dwinCopySettingsTo(dwin_data);
       EEPROM_WRITE(dwin_data);
     }
     #endif
@@ -1607,8 +1622,8 @@ void MarlinSettings::postprocess() {
     #if ENABLED(DWIN_CREALITY_LCD_JYERSUI)
     {
       _FIELD_TEST(dwin_settings);
-      char dwin_settings[CrealityDWIN.eeprom_data_size] = { 0 };
-      CrealityDWIN.Save_Settings(dwin_settings);
+      char dwin_settings[jyersDWIN.eeprom_data_size] = { 0 };
+      jyersDWIN.saveSettings(dwin_settings);
       EEPROM_WRITE(dwin_settings);
     }
     #endif
@@ -1696,13 +1711,13 @@ void MarlinSettings::postprocess() {
     // Fixed-Time Motion
     //
     #if ENABLED(FT_MOTION)
-      _FIELD_TEST(fxdTiCtrl_cfg);
-      EEPROM_WRITE(fxdTiCtrl.cfg);
+      _FIELD_TEST(ftMotion_cfg);
+      EEPROM_WRITE(ftMotion.cfg);
     #endif
 
     //
     // Input Shaping
-    ///
+    //
     #if HAS_ZV_SHAPING
       #if ENABLED(INPUT_SHAPING_X)
         EEPROM_WRITE(stepper.get_shaping_frequency(X_AXIS));
@@ -1712,6 +1727,20 @@ void MarlinSettings::postprocess() {
         EEPROM_WRITE(stepper.get_shaping_frequency(Y_AXIS));
         EEPROM_WRITE(stepper.get_shaping_damping_ratio(Y_AXIS));
       #endif
+    #endif
+
+    //
+    // HOTEND_IDLE_TIMEOUT
+    //
+    #if ENABLED(HOTEND_IDLE_TIMEOUT)
+      EEPROM_WRITE(hotend_idle.cfg);
+    #endif
+
+    //
+    // Nonlinear Extrusion
+    //
+    #if ENABLED(NONLINEAR_EXTRUSION)
+      EEPROM_WRITE(stepper.ne);
     #endif
 
     //
@@ -2013,7 +2042,7 @@ void MarlinSettings::postprocess() {
           if (grid_max_x == (GRID_MAX_POINTS_X) && grid_max_y == (GRID_MAX_POINTS_Y)) {
             if (!validating) set_bed_leveling_enabled(false);
             bedlevel.set_grid(spacing, start);
-            EEPROM_READ(bedlevel.z_values);                 // 9 to 256 floats
+            EEPROM_READ(bedlevel.z_values);            // 9 to 256 floats
           }
           else if (grid_max_x > (GRID_MAX_POINTS_X) || grid_max_y > (GRID_MAX_POINTS_Y)) {
             eeprom_error = ERR_EEPROM_CORRUPT;
@@ -2265,10 +2294,12 @@ void MarlinSettings::postprocess() {
       //
       // LCD Backlight / Sleep Timeout
       //
-      #if LCD_BACKLIGHT_TIMEOUT_MINS
-        EEPROM_READ(ui.backlight_timeout_minutes);
-      #elif HAS_DISPLAY_SLEEP
-        EEPROM_READ(ui.sleep_timeout_minutes);
+      #if ENABLED(EDITABLE_DISPLAY_TIMEOUT)
+        #if HAS_BACKLIGHT_TIMEOUT
+          EEPROM_READ(ui.backlight_timeout_minutes);
+        #elif HAS_DISPLAY_SLEEP
+          EEPROM_READ(ui.sleep_timeout_minutes);
+        #endif
       #endif
 
       //
@@ -2657,14 +2688,14 @@ void MarlinSettings::postprocess() {
         const char dwin_data[eeprom_data_size] = { 0 };
         _FIELD_TEST(dwin_data);
         EEPROM_READ(dwin_data);
-        if (!validating) DWIN_CopySettingsFrom(dwin_data);
+        if (!validating) dwinCopySettingsFrom(dwin_data);
       }
       #elif ENABLED(DWIN_CREALITY_LCD_JYERSUI)
       {
-        const char dwin_settings[CrealityDWIN.eeprom_data_size] = { 0 };
+        const char dwin_settings[jyersDWIN.eeprom_data_size] = { 0 };
         _FIELD_TEST(dwin_settings);
         EEPROM_READ(dwin_settings);
-        if (!validating) CrealityDWIN.Load_Settings(dwin_settings);
+        if (!validating) jyersDWIN.loadSettings(dwin_settings);
       }
       #endif
 
@@ -2756,8 +2787,8 @@ void MarlinSettings::postprocess() {
       // Fixed-Time Motion
       //
       #if ENABLED(FT_MOTION)
-        _FIELD_TEST(fxdTiCtrl_cfg);
-        EEPROM_READ(fxdTiCtrl.cfg);
+        _FIELD_TEST(ftMotion_cfg);
+        EEPROM_READ(ftMotion.cfg);
       #endif
 
       //
@@ -2779,6 +2810,20 @@ void MarlinSettings::postprocess() {
         stepper.set_shaping_frequency(Y_AXIS, _data[0]);
         stepper.set_shaping_damping_ratio(Y_AXIS, _data[1]);
       }
+      #endif
+
+      //
+      // HOTEND_IDLE_TIMEOUT
+      //
+      #if ENABLED(HOTEND_IDLE_TIMEOUT)
+        EEPROM_READ(hotend_idle.cfg);
+      #endif
+
+      //
+      // Nonlinear Extrusion
+      //
+      #if ENABLED(NONLINEAR_EXTRUSION)
+        EEPROM_READ(stepper.ne);
       #endif
 
       //
@@ -2843,10 +2888,10 @@ void MarlinSettings::postprocess() {
         DEBUG_ECHO_MSG("Index: ", eeprom_index - (EEPROM_OFFSET), " Size: ", datasize());
         break;
       case ERR_EEPROM_CORRUPT:
-        DEBUG_ERROR_MSG(STR_ERR_EEPROM_CORRUPT);
+        DEBUG_WARN_MSG(STR_ERR_EEPROM_CORRUPT);
         break;
       case ERR_EEPROM_CRC:
-        DEBUG_ERROR_MSG("EEPROM CRC mismatch - (stored) ", stored_crc, " != ", working_crc, " (calculated)!");
+        DEBUG_WARN_MSG("EEPROM CRC mismatch - (stored) ", stored_crc, " != ", working_crc, " (calculated)!");
         TERN_(HOST_EEPROM_CHITCHAT, hostui.notify(GET_TEXT_F(MSG_ERR_EEPROM_CRC)));
         break;
       default: break;
@@ -2997,7 +3042,7 @@ void MarlinSettings::postprocess() {
         #endif
 
         #if ENABLED(DWIN_LCD_PROUI)
-          status = !bedLevelTools.meshvalidate();
+          status = !bedLevelTools.meshValidate();
           if (status) {
             bedlevel.invalidate();
             LCD_MESSAGE(MSG_UBL_MESH_INVALID);
@@ -3026,7 +3071,7 @@ void MarlinSettings::postprocess() {
 #else // !EEPROM_SETTINGS
 
   bool MarlinSettings::save() {
-    DEBUG_ERROR_MSG("EEPROM disabled");
+    DEBUG_WARN_MSG("EEPROM disabled");
     return false;
   }
 
@@ -3147,7 +3192,7 @@ void MarlinSettings::reset() {
     #endif
   #endif
 
-  TERN_(DWIN_CREALITY_LCD_JYERSUI, CrealityDWIN.Reset_Settings());
+  TERN_(DWIN_CREALITY_LCD_JYERSUI, jyersDWIN.resetSettings());
 
   //
   // Case Light Brightness
@@ -3374,7 +3419,6 @@ void MarlinSettings::reset() {
   //
   // Heated Bed PID
   //
-
   #if ENABLED(PIDTEMPBED)
     thermalManager.temp_bed.pid.set(DEFAULT_bedKp, DEFAULT_bedKi, DEFAULT_bedKd);
   #endif
@@ -3382,7 +3426,6 @@ void MarlinSettings::reset() {
   //
   // Heated Chamber PID
   //
-
   #if ENABLED(PIDTEMPCHAMBER)
     thermalManager.temp_chamber.pid.set(DEFAULT_chamberKp, DEFAULT_chamberKi, DEFAULT_chamberKd);
   #endif
@@ -3410,10 +3453,12 @@ void MarlinSettings::reset() {
   //
   // LCD Backlight / Sleep Timeout
   //
-  #if LCD_BACKLIGHT_TIMEOUT_MINS
-    ui.backlight_timeout_minutes = LCD_BACKLIGHT_TIMEOUT_MINS;
-  #elif HAS_DISPLAY_SLEEP
-    ui.sleep_timeout_minutes = TERN(TOUCH_SCREEN, TOUCH_IDLE_SLEEP_MINS, DISPLAY_SLEEP_MINUTES);
+  #if ENABLED(EDITABLE_DISPLAY_TIMEOUT)
+    #if HAS_BACKLIGHT_TIMEOUT
+      ui.backlight_timeout_minutes = LCD_BACKLIGHT_TIMEOUT_MINS;
+    #elif HAS_DISPLAY_SLEEP
+      ui.sleep_timeout_minutes = TERN(TOUCH_SCREEN, TOUCH_IDLE_SLEEP_MINS, DISPLAY_SLEEP_MINUTES);
+    #endif
   #endif
 
   //
@@ -3434,7 +3479,6 @@ void MarlinSettings::reset() {
   //
   // Volumetric & Filament Size
   //
-
   #if DISABLED(NO_VOLUMETRICS)
     parser.volumetric_enabled = ENABLED(VOLUMETRIC_DEFAULT_ON);
     for (uint8_t q = 0; q < COUNT(planner.filament_size); ++q)
@@ -3534,7 +3578,7 @@ void MarlinSettings::reset() {
   //
   // Ender-3 V2 with ProUI
   //
-  TERN_(DWIN_LCD_PROUI, DWIN_SetDataDefaults());
+  TERN_(DWIN_LCD_PROUI, dwinSetDataDefaults());
 
   //
   // Model predictive control
@@ -3574,7 +3618,12 @@ void MarlinSettings::reset() {
   //
   // Fixed-Time Motion
   //
-  TERN_(FT_MOTION, fxdTiCtrl.set_defaults());
+  TERN_(FT_MOTION, ftMotion.set_defaults());
+
+  //
+  // Nonlinear Extrusion
+  //
+  TERN_(NONLINEAR_EXTRUSION, stepper.ne.reset());
 
   //
   // Input Shaping
@@ -3590,12 +3639,17 @@ void MarlinSettings::reset() {
     #endif
   #endif
 
+  //
+  // Hotend Idle Timeout
+  //
+  TERN_(HOTEND_IDLE_TIMEOUT, hotend_idle.cfg.set_defaults());
+
   postprocess();
 
   #if ANY(EEPROM_CHITCHAT, DEBUG_LEVELING_FEATURE)
     FSTR_P const hdsl = F("Hardcoded Default Settings Loaded");
     TERN_(HOST_EEPROM_CHITCHAT, hostui.notify(hdsl));
-    DEBUG_ECHO_START(); DEBUG_ECHOLNF(hdsl);
+    DEBUG_ECHO_START(); DEBUG_ECHOLN(hdsl);
   #endif
 
   TERN_(EXTENSIBLE_UI, ExtUI::onFactoryReset());
@@ -3671,7 +3725,7 @@ void MarlinSettings::reset() {
     //
     // M206 Home Offset
     //
-    TERN_(HAS_M206_COMMAND, gcode.M206_report(forReplay));
+    TERN_(HAS_HOME_OFFSET, gcode.M206_report(forReplay));
 
     //
     // M218 Hotend offsets
@@ -3691,12 +3745,11 @@ void MarlinSettings::reset() {
           for (uint8_t py = 0; py < GRID_MAX_POINTS_Y; ++py) {
             for (uint8_t px = 0; px < GRID_MAX_POINTS_X; ++px) {
               CONFIG_ECHO_START();
-              SERIAL_ECHOPGM("  G29 S3 I", px, " J", py);
-              SERIAL_ECHOLNPAIR_F_P(SP_Z_STR, LINEAR_UNIT(bedlevel.z_values[px][py]), 5);
+              SERIAL_ECHOLN(F("  G29 S3 I"), px, F(" J"), py, FPSTR(SP_Z_STR), p_float_t(LINEAR_UNIT(bedlevel.z_values[px][py]), 5));
             }
           }
           CONFIG_ECHO_START();
-          SERIAL_ECHOLNPAIR_F("  G29 S4 Z", LINEAR_UNIT(bedlevel.z_offset), 5);
+          SERIAL_ECHOLNPGM("  G29 S4 Z", p_float_t(LINEAR_UNIT(bedlevel.z_offset), 5));
         }
 
       #elif ENABLED(AUTO_BED_LEVELING_UBL)
@@ -3717,8 +3770,7 @@ void MarlinSettings::reset() {
           for (uint8_t py = 0; py < GRID_MAX_POINTS_Y; ++py) {
             for (uint8_t px = 0; px < GRID_MAX_POINTS_X; ++px) {
               CONFIG_ECHO_START();
-              SERIAL_ECHOPGM("  G29 W I", px, " J", py);
-              SERIAL_ECHOLNPAIR_F_P(SP_Z_STR, LINEAR_UNIT(bedlevel.z_values[px][py]), 5);
+              SERIAL_ECHOLN(F("  G29 W I"), px, F(" J"), py, FPSTR(SP_Z_STR), p_float_t(LINEAR_UNIT(bedlevel.z_values[px][py]), 5));
             }
           }
         }
@@ -3779,7 +3831,7 @@ void MarlinSettings::reset() {
     //
     // Display Sleep
     //
-    TERN_(HAS_GCODE_M255, gcode.M255_report(forReplay));
+    TERN_(EDITABLE_DISPLAY_TIMEOUT, gcode.M255_report(forReplay));
 
     //
     // LCD Brightness
@@ -3843,9 +3895,19 @@ void MarlinSettings::reset() {
     TERN_(FT_MOTION, gcode.M493_report(forReplay));
 
     //
+    // Nonlinear Extrusion
+    //
+    TERN_(NONLINEAR_EXTRUSION, gcode.M592_report(forReplay));
+
+    //
     // Input Shaping
     //
     TERN_(HAS_ZV_SHAPING, gcode.M593_report(forReplay));
+
+    //
+    // Hotend Idle Timeout
+    //
+    TERN_(HOTEND_IDLE_TIMEOUT, gcode.M86_report(forReplay));
 
     //
     // Linear Advance
