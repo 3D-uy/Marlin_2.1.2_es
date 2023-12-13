@@ -1,70 +1,70 @@
 # Marlin Firmware Arduino Project Makefile
 #
-# Makefile Based on:
+# Makefile basado en:
 # Arduino 0011 Makefile
-# Arduino adaptation by mellis, eighthave, oli.keller
-# Marlin adaption by Daid
-# Marlin 2.0 support and RELOC_WORKAROUND by @marcio-ao
+# Adaptación para Arduino por mellis, eighthave, oli.keller
+# Adaptación para Marlin por Daid
+# Soporte para Marlin 2.0 y RELOC_WORKAROUND por @marcio-ao
 #
-# This has been tested with Arduino 0022.
+# Esto ha sido probado con Arduino 0022.
 #
-# This makefile allows you to build sketches from the command line
-# without the Arduino environment (or Java).
+# Este makefile te permite compilar sketches desde la línea de comandos
+# sin necesidad del entorno Arduino (o Java).
 #
-# Detailed instructions for using the makefile:
+# Instrucciones detalladas para utilizar el makefile:
 #
-#  1. Modify the line containing "ARDUINO_INSTALL_DIR" to point to the directory that
-#     contains the Arduino installation (for example, under macOS, this
-#     might be /Applications/Arduino.app/Contents/Resources/Java).
+#  1. Modifica la línea que contiene "ARDUINO_INSTALL_DIR" para que apunte al directorio que
+#     contiene la instalación de Arduino (por ejemplo, en macOS, esto
+#     podría ser /Applications/Arduino.app/Contents/Resources/Java).
 #
-#  2. Modify the line containing "UPLOAD_PORT" to refer to the filename
-#     representing the USB or serial connection to your Arduino board
-#     (e.g. UPLOAD_PORT = /dev/tty.USB0).  If the exact name of this file
-#     changes, you can use * as a wild card (e.g. UPLOAD_PORT = /dev/tty.usb*).
+#  2. Modifica la línea que contiene "UPLOAD_PORT" para que se refiera al nombre del archivo
+#     que representa la conexión USB o serial a tu placa de Arduino
+#     (por ejemplo, UPLOAD_PORT = /dev/tty.USB0). Si el nombre exacto de este archivo
+#     cambia, puedes usar * como comodín (por ejemplo, UPLOAD_PORT = /dev/tty.usb*).
 #
-#  3. Set the line containing "MCU" to match your board's processor. Set
-#     "PROG_MCU" as the AVR part name corresponding to "MCU". You can use the
-#     following command to get a list of correspondences: `avrdude -c alf -p x`
-#     Older boards are atmega8 based, newer ones like Arduino Mini, Bluetooth
-#     or Diecimila have the atmega168.  If you're using a LilyPad Arduino,
-#     change F_CPU to 8000000. If you are using Gen7 electronics, you
-#     probably need to use 20000000. Either way, you must regenerate
-#     the speed lookup table with create_speed_lookuptable.py.
+#  3. Establece la línea que contiene "MCU" para que coincida con el procesador de tu placa. Establece
+#     "PROG_MCU" como el nombre de la parte AVR correspondiente a "MCU". Puedes usar el
+#     siguiente comando para obtener una lista de correspondencias: `avrdude -c alf -p x`
+#     Las placas más antiguas están basadas en atmega8, las más nuevas como Arduino Mini, Bluetooth
+#     o Diecimila tienen el atmega168. Si estás utilizando un Arduino LilyPad,
+#     cambia F_CPU a 8000000. Si estás utilizando electrónica Gen7, probablemente necesitas
+#     utilizar 20000000. De cualquier manera, debes regenerar
+#     la tabla de búsqueda de velocidad con create_speed_lookuptable.py.
 #
-#  4. Type "make" and press enter to compile/verify your program.
+#  4. Escribe "make" y presiona enter para compilar/verificar tu programa.
 #
-#  5. Type "make upload", reset your Arduino board, and press enter to
-#     upload your program to the Arduino board.
+#  5. Escribe "make upload", reinicia tu placa de Arduino y presiona enter para
+#     cargar tu programa en la placa de Arduino.
 #
-# Note that all settings at the top of this file can be overridden from
-# the command line with, for example, "make HARDWARE_MOTHERBOARD=71"
+# Ten en cuenta que todas las configuraciones en la parte superior de este archivo pueden ser anuladas desde
+# la línea de comandos con, por ejemplo, "make HARDWARE_MOTHERBOARD=71"
 #
-# To compile for RAMPS (atmega2560) with Arduino 1.6.9 at root/arduino you would use...
+# Para compilar para RAMPS (atmega2560) con Arduino 1.6.9 en root/arduino, usarías...
 #
 #   make ARDUINO_VERSION=10609 AVR_TOOLS_PATH=/root/arduino/hardware/tools/avr/bin/ \
 #   HARDWARE_MOTHERBOARD=1200 ARDUINO_INSTALL_DIR=/root/arduino
 #
-# To compile and upload simply add "upload" to the end of the line...
+# Para compilar y cargar, simplemente agrega "upload" al final de la línea...
 #
 #   make ARDUINO_VERSION=10609 AVR_TOOLS_PATH=/root/arduino/hardware/tools/avr/bin/ \
 #   HARDWARE_MOTHERBOARD=1200 ARDUINO_INSTALL_DIR=/root/arduino upload
 #
-# If uploading doesn't work try adding the parameter "AVRDUDE_PROGRAMMER=wiring" or
-# start upload manually (using stk500) like so:
+# Si la carga no funciona, intenta agregar el parámetro "AVRDUDE_PROGRAMMER=wiring" o
+# inicia la carga manualmente (usando stk500) de la siguiente manera:
 #
 #   avrdude -C /root/arduino/hardware/tools/avr/etc/avrdude.conf -v -p m2560 -c stk500 \
 #   -U flash:w:applet/Marlin.hex:i -P /dev/ttyUSB0
 #
-# Or, try disconnecting USB to power down and then reconnecting before running avrdude.
+# O, intenta desconectar USB para apagar y luego volver a conectar antes de ejecutar avrdude.
 #
 
-# This defines the board to compile for (see boards.h for your board's ID)
+# Esto define la placa para la cual compilar (ver boards.h para el ID de tu placa)
 HARDWARE_MOTHERBOARD ?= 1020
 
 ifeq ($(OS),Windows_NT)
   # Windows
-  ARDUINO_INSTALL_DIR ?= ${HOME}/Arduino
-  ARDUINO_USER_DIR ?= ${HOME}/Arduino
+  ARDUINO_INSTALL_DIR ?= ${HOME}/AppData/Local/Arduino
+  ARDUINO_USER_DIR ?= ${HOME}/Documents/Arduino
 else
   UNAME_S := $(shell uname -s)
   ifeq ($(UNAME_S),Linux)
@@ -82,11 +82,11 @@ endif
 
 # Arduino source install directory, and version number
 # On most linuxes this will be /usr/share/arduino
-ARDUINO_INSTALL_DIR  ?= ${HOME}/Arduino
-ARDUINO_VERSION      ?= 106
+ARDUINO_INSTALL_DIR  ?= ${HOME}/AppData/Local/Arduino       # C:/Users/${USERNAME}/AppData/Local/Arduino
+ARDUINO_VERSION      ?= 10819
 
 # The installed Libraries are in the User folder
-ARDUINO_USER_DIR ?= ${HOME}/Arduino
+ARDUINO_USER_DIR ?= ${HOME}/Documents/Arduino
 
 # You can optionally set a path to the avr-gcc tools.
 # Requires a trailing slash. For example, /usr/local/avr-gcc/bin/
@@ -656,18 +656,18 @@ ifeq ($(HARDWARE_VARIANT), $(filter $(HARDWARE_VARIANT),arduino Teensy Sanguino)
   # Old libraries (avr-core 1.6.21 < / Arduino < 1.6.8)
   VPATH += $(ARDUINO_INSTALL_DIR)/hardware/arduino/avr/libraries/SPI
   # New libraries (avr-core >= 1.6.21 / Arduino >= 1.6.8)
-  VPATH += $(ARDUINO_INSTALL_DIR)/hardware/arduino/avr/libraries/SPI/src
+  VPATH += $(ARDUINO_INSTALL_DIR)/packages/arduino/hardware/arduino/avr/1.8.6/libraries/SPI/src
 endif
 
 ifeq ($(IS_MCU),1)
-  VPATH += $(ARDUINO_INSTALL_DIR)/hardware/arduino/avr/cores/arduino
+  VPATH += $(ARDUINO_INSTALL_DIR)/packages/arduino/hardware/arduino/avr/1.8.6/cores/arduino
 
   # Old libraries (avr-core 1.6.21 < / Arduino < 1.6.8)
   VPATH += $(ARDUINO_INSTALL_DIR)/hardware/arduino/avr/libraries/SPI
   VPATH += $(ARDUINO_INSTALL_DIR)/hardware/arduino/avr/libraries/SoftwareSerial
   # New libraries (avr-core >= 1.6.21 / Arduino >= 1.6.8)
-  VPATH += $(ARDUINO_INSTALL_DIR)/hardware/arduino/avr/libraries/SPI/src
-  VPATH += $(ARDUINO_INSTALL_DIR)/hardware/arduino/avr/libraries/SoftwareSerial/src
+  VPATH += $(ARDUINO_INSTALL_DIR)/packages/arduino/hardware/arduino/avr/1.8.6/libraries/SPI/src
+  VPATH += $(ARDUINO_INSTALL_DIR)/packages/arduino/hardware/arduino/avr/1.8.6/libraries/SoftwareSerial/src
 endif
 
 VPATH += $(ARDUINO_INSTALL_DIR)/libraries/LiquidCrystal/src
@@ -681,17 +681,17 @@ ifeq ($(WIRE), 1)
   VPATH += $(ARDUINO_INSTALL_DIR)/hardware/arduino/avr/libraries/Wire
   VPATH += $(ARDUINO_INSTALL_DIR)/hardware/arduino/avr/libraries/Wire/utility
   # New libraries (avr-core >= 1.6.21 / Arduino >= 1.6.8)
-  VPATH += $(ARDUINO_INSTALL_DIR)/hardware/arduino/avr/libraries/Wire/src
-  VPATH += $(ARDUINO_INSTALL_DIR)/hardware/arduino/avr/libraries/Wire/src/utility
+  VPATH += $(ARDUINO_INSTALL_DIR)/packages/arduino/hardware/avr/1.8.6/libraries/Wire/src
+  VPATH += $(ARDUINO_INSTALL_DIR)/packages/arduino/hardware/avr/1.8.6/libraries/Wire/src/utility
 endif
 ifeq ($(NEOPIXEL), 1)
 VPATH += $(ARDUINO_INSTALL_DIR)/libraries/Adafruit_NeoPixel
 endif
 ifeq ($(U8GLIB), 1)
-VPATH += $(ARDUINO_INSTALL_DIR)/libraries/U8glib
-VPATH += $(ARDUINO_INSTALL_DIR)/libraries/U8glib/csrc
-VPATH += $(ARDUINO_INSTALL_DIR)/libraries/U8glib/cppsrc
-VPATH += $(ARDUINO_INSTALL_DIR)/libraries/U8glib/fntsrc
+VPATH += $(ARDUINO_INSTALL_DIR)/libraries/U8glib-HAL
+VPATH += $(ARDUINO_INSTALL_DIR)/libraries/U8glib-HAL/src
+# VPATH += $(ARDUINO_INSTALL_DIR)/libraries/U8glib
+# VPATH += $(ARDUINO_INSTALL_DIR)/libraries/U8glib/src
 endif
 ifeq ($(TMC), 1)
 VPATH += $(ARDUINO_INSTALL_DIR)/libraries/TMCStepper/src
@@ -700,9 +700,9 @@ endif
 
 ifeq ($(HARDWARE_VARIANT), arduino)
   HARDWARE_SUB_VARIANT ?= mega
-  VPATH += $(ARDUINO_INSTALL_DIR)/hardware/arduino/avr/variants/$(HARDWARE_SUB_VARIANT)
+  VPATH += $(ARDUINO_INSTALL_DIR)/packages/arduino/hardware/avr/1.8.6/variants/$(HARDWARE_SUB_VARIANT)
 else ifeq ($(HARDWARE_VARIANT), Sanguino)
-  VPATH += $(ARDUINO_INSTALL_DIR)/hardware/marlin/avr/variants/sanguino
+  VPATH += $(ARDUINO_INSTALL_DIR)/packages/arduino/hardware/avr/1.8.6/variants/sanguino
 else ifeq ($(HARDWARE_VARIANT), archim)
   VPATH   += $(ARDUINO_INSTALL_DIR)/packages/ultimachine/hardware/sam/1.6.9-b/system/libsam
   VPATH   += $(ARDUINO_INSTALL_DIR)/packages/ultimachine/hardware/sam/1.6.9-b/system/CMSIS/CMSIS/Include/
@@ -718,7 +718,7 @@ else ifeq ($(HARDWARE_VARIANT), archim)
   LDLIBS   = $(ARDUINO_INSTALL_DIR)/packages/ultimachine/hardware/sam/1.6.9-b/variants/archim/libsam_sam3x8e_gcc_rel.a
 else
   HARDWARE_SUB_VARIANT ?= standard
-  VPATH += $(ARDUINO_INSTALL_DIR)/hardware/$(HARDWARE_VARIANT)/variants/$(HARDWARE_SUB_VARIANT)
+  VPATH += $(ARDUINO_INSTALL_DIR)/packages/arduino/hardware/avr/1.8.6/variants/$(HARDWARE_SUB_VARIANT)
 endif
 
 LIB_SRC = wiring.c \
@@ -733,7 +733,7 @@ endif
 
 ifeq ($(HARDWARE_VARIANT), Teensy)
   LIB_SRC = wiring.c
-  VPATH += $(ARDUINO_INSTALL_DIR)/hardware/teensy/cores/teensy
+  VPATH += $(ARDUINO_INSTALL_DIR)/packages/arduino/hardware/teensy/cores/teensy
 endif
 
 LIB_CXXSRC = WMath.cpp WString.cpp Print.cpp SPI.cpp
@@ -880,7 +880,7 @@ AVRDUDE_WRITE_FLASH = -Uflash:w:$(BUILD_DIR)/$(TARGET).hex:i
 ifeq ($(shell uname -s), Linux)
   AVRDUDE_CONF = /etc/avrdude/avrdude.conf
 else
-  AVRDUDE_CONF = $(ARDUINO_INSTALL_DIR)/hardware/tools/avr/etc/avrdude.conf
+  AVRDUDE_CONF = $(ARDUINO_INSTALL_DIR)/packages/arduino/tools/avrdude/6.3.0-arduino17/etc/avrdude.conf
 endif
 AVRDUDE_FLAGS = -D -C$(AVRDUDE_CONF) \
   -p$(PROG_MCU) -P$(AVRDUDE_PORT) -c$(AVRDUDE_PROGRAMMER) \

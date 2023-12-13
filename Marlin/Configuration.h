@@ -2850,7 +2850,7 @@
 
 //=============================================================================
 //======================= Selección de LCD/Controlador ========================
-//======================== (LCDs gráficos) ========================
+//======================== (LCDs gráficos) ====================================
 //=============================================================================
 
 //
@@ -3238,11 +3238,13 @@
 
 //
 // 1024x600, 7", Pantalla de stock RGB con codificador rotatorio de BIQU-BX
+// https://github.com/bigtreetech/BIQU-BX/tree/master/Hardware
 //
 //#define BIQU_BX_TFT70
 
 //
 // 480x320, 3.5", Pantalla de stock SPI con codificador rotatorio de la serie BIQU B1 SE
+// https://github.com/bigtreetech/TFT35-SPI/tree/master/v1
 //
 //#define BTT_TFT35_SPI_V1_0
 
@@ -3360,7 +3362,7 @@
 //#define EASYTHREED_UI
 
 //=============================================================================
-//=============================== Características Extra ========================
+//=============================== Características Extra =======================
 //=============================================================================
 
 // @section ventiladores
