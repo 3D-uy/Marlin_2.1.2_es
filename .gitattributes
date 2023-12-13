@@ -1,2 +1,21 @@
-# Auto detect text files and perform LF normalization
+# Establecer el comportamiento predeterminado, en caso de que las personas no tengan configurado core.autocrlf.
 * text=auto
+
+# Archivos con finales de línea Unix
+*.c   text eol=lf
+*.cpp text eol=lf
+*.h   text eol=lf
+*.ino text eol=lf
+*.py  text eol=lf
+*.sh  text eol=lf
+*.scad text eol=lf
+
+# Archivos con finales de línea nativos
+# *.sln text
+
+# Archivos binarios
+*.png binary
+*.jpg binary
+*.fon binary
+*.bin binary
+*.woff binary

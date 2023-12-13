@@ -57,3 +57,12 @@ tests-all-local-docker:
 setup-local-docker:
 	$(CONTAINER_RT_BIN) build -t $(CONTAINER_IMAGE) -f docker/Dockerfile .
 .PHONY: setup-local-docker
+
+PINS := $(shell find Marlin/src/pins -mindepth 2 -name '*.h')
+
+.PHONY: $(PINS)
+
+$(PINS): %:
+	@echo "Formatting $@" && node buildroot/share/scripts/pinsformat.js $@
+
+format-pins: $(PINS)
