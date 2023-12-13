@@ -111,7 +111,7 @@ body:
     - type: input
     attributes:
       label: LCD/Controller
-      description:Algunos comportamientos de Marlin están determinados por el controlador. Describe el modelo y la versión de tu pantalla/controlador LCD.
+      description: Algunos comportamientos de Marlin están determinados por el controlador. Describe el modelo y la versión de tu pantalla/controlador LCD.
 
   - type: input
     attributes:
