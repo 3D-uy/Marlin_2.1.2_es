@@ -291,7 +291,7 @@
 
   #if ENABLED(ANET_FULL_GRAPHICS_LCD_ALT_WIRING)
     #ifndef NO_CONTROLLER_CUSTOM_WIRING_WARNING
-      #error "CAUTION! ANET_FULL_GRAPHICS_LCD_ALT_WIRING requires wiring modifications. See 'pins_BTT_SKR_V1_4.h' for details. (Define NO_CONTROLLER_CUSTOM_WIRING_WARNING to suppress this warning.)"
+      //#error "CAUTION! ANET_FULL_GRAPHICS_LCD_ALT_WIRING requires wiring modifications. See 'pins_BTT_SKR_V1_4.h' for details. (Define NO_CONTROLLER_CUSTOM_WIRING_WARNING to suppress this warning.)"
     #endif
 
     /**
@@ -325,7 +325,7 @@
 
   #elif ENABLED(ANET_FULL_GRAPHICS_LCD)
     #ifndef NO_CONTROLLER_CUSTOM_WIRING_WARNING
-      #error "CAUTION! ANET_FULL_GRAPHICS_LCD requires wiring modifications. See 'pins_BTT_SKR_V1_4.h' for details. (Define NO_CONTROLLER_CUSTOM_WIRING_WARNING to suppress this warning.)"
+      //#error "CAUTION! ANET_FULL_GRAPHICS_LCD requires wiring modifications. See 'pins_BTT_SKR_V1_4.h' for details. (Define NO_CONTROLLER_CUSTOM_WIRING_WARNING to suppress this warning.)"
     #endif
 
    /**
