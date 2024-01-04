@@ -42,20 +42,19 @@
 //===========================================================================
 
 /**
- * Aquí hay algunos enlaces útiles para ayudarte a configurar y calibrar tu máquina:
+ * Aquí tienes algunos enlaces útiles para ayudarte a configurar y calibrar tu máquina:
  *
- * Ejemplos de Configuración:     https://github.com/MarlinFirmware/Configurations/branches/all
+ * Ejemplos de configuraciones:    https://github.com/MarlinFirmware/Configurations/branches/all
  *
- * Calculadora Průša:            https://blog.prusa3d.com/calculator_3416/
+ * Calculadora Průša:              https://blog.prusaprinters.org/calculator_3416/
  *
- * Guías de Calibración:         https://reprap.org/wiki/Calibration
- *                                https://reprap.org/wiki/Triffid_Hunter%27s_Calibration_Guide
- *                                https://web.archive.org/web/20220907014303/https://sites.google.com/site/repraplogphase/calibration-of-your-reprap
- *                                https://youtu.be/wAL9d7FgInk
- *                                https://teachingtechyt.github.io/calibration.html
+ * Guías de calibración:           https://reprap.org/wiki/Calibration
+ *                                 https://reprap.org/wiki/Triffid_Hunter%27s_Calibration_Guide
+ *                                 https://sites.google.com/site/repraplogphase/calibration-of-your-reprap
+ *                                 https://youtu.be/wAL9d7FgInk
  *
- * Objetos de Calibración:       https://www.thingiverse.com/thing:5573
- *                                https://www.thingiverse.com/thing:1278865
+ * Objetos de calibración:         https://www.thingiverse.com/thing:5573
+ *                                 https://www.thingiverse.com/thing:1278865
  */
 
 // @section info
@@ -111,15 +110,6 @@
  */
 //#define SERIAL_PORT_3 1
 //#define BAUDRATE_3 250000   // :[2400, 9600, 19200, 38400, 57600, 115200, 250000, 500000, 1000000] Habilitar para anular BAUDRATE
-
-/**
- * Seleccionar un puerto serie para comunicarse con el protocolo RS485
- * :[-1, 0, 1, 2, 3, 4, 5, 6, 7]
- */
-//#define RS485_SERIAL_PORT 1
-#ifdef RS485_SERIAL_PORT
-  //#define RS485_BUS_BUFFER_SIZE 128
-#endif
 
 // Habilitar la interfaz de serie Bluetooth en dispositivos AT90USB
 //#define BLUETOOTH
@@ -472,22 +462,20 @@
  *    11 : 100kΩ Alfombrillas de silicona AC de Keenovo, la mayoría de las impresoras Wanhao i3 - beta 3950, 1%
  *    12 : 100kΩ Vishay 0603 SMD NTCS0603E3104FXT (#8) - calibrado para la cama caliente de Makibox
  *    13 : 100kΩ Hisens hasta 300°C - para hotend "
- *    14 : 100kΩ (R25), 4092K (beta25), 4.7kΩ pull-up, termistor de cama utilizado en Ender-5 S1
- *    15 : 100kΩ Calibrado para hotend JGAurora A5
- *    17 : 100kΩ Termistor blanco Dagoma NTC
- *    18 : 200kΩ ATC Semitec 204GT-2 Dagoma.Fr - MKS_Base_DKU001327
- *    22 : 100kΩ GTM32 Pro vB - hotend - pull-up de 4.7kΩ a 3.3V y 220Ω a la entrada analógica
- *    23 : 100kΩ GTM32 Pro vB - cama - pull-up de 4.7kΩ a 3.3V y 220Ω a la entrada analógica
- *    30 : 100kΩ Kis3d Silicona calefactora de 200W/300W con placa de fundición de precisión de 6 mm (EN AW 5083) NTC100K - beta 3950
- *    60 : 100kΩ Maker's Tool Works Kapton Bed Thermistor - beta 3950
- *    61 : 100kΩ Formbot/Vivedino 350°C Thermistor - beta 3950
- *    66 : 4.7MΩ Dyze Design / Trianglelab T-D500 500°C High Temperature Thermistor
- *    67 : 500kΩ SliceEngineering 450°C Thermistor
- *    68 : Placa amplificadora PT100 de Dyze Design
- *    70 : 100kΩ bq Hephestos 2
- *    75 : 100kΩ Almohadilla térmica de silicona genérica con NTC100K MGB18-104F39050L32
- *   666 : Termistor personalizado Einstart S de 200kΩ con pull-up de 10k.
- *  2000 : 100kΩ Ultimachine Rambo TDK NTCG104LH104KT1 NTC100K motherboard Thermistor
+ *    14: 100kΩ (R25), 4092K (beta25), 4.7kΩ pull-up, termistor de cama utilizado en Ender-5 S1
+ *    15: 100kΩ Calibrado para hotend JGAurora A5
+ *    18: 200kΩ ATC Semitec 204GT-2 Dagoma.Fr - MKS_Base_DKU001327
+ *    22: 100kΩ GTM32 Pro vB - hotend - pull-up de 4.7kΩ a 3.3V y 220Ω a la entrada analógica
+ *    23: 100kΩ GTM32 Pro vB - cama - pull-up de 4.7kΩ a 3.3V y 220Ω a la entrada analógica
+ *    30: 100kΩ Kis3d Silicona calefactora de 200W/300W con placa de fundición de precisión de 6 mm (EN AW 5083) NTC100K - beta 3950
+ *    60: 100kΩ Maker's Tool Works Kapton Bed Thermistor - beta 3950
+ *    61: 100kΩ Formbot/Vivedino 350°C Thermistor - beta 3950
+ *    66: 4.7MΩ Dyze Design / Trianglelab T-D500 500°C High Temperature Thermistor
+ *    67: 500kΩ SliceEngineering 450°C Thermistor
+ *    68: Placa amplificadora PT100 de Dyze Design
+ *    70: 100kΩ bq Hephestos 2
+ *    75: 100kΩ Almohadilla térmica de silicona genérica con NTC100K MGB18-104F39050L32
+ *  2000: 100kΩ Ultimachine Rambo TDK NTCG104LH104KT1 NTC100K motherboard Thermistor
  *   
  * ================================================================
  *   Termistores Analógicos - Resistencia de pull-up de 1kΩ
@@ -704,47 +692,43 @@
  * @section mpctemp
  */
 #if ENABLED(MPCTEMP)
-  #define MPC_AUTOTUNE                                // Incluir un método para hacer auto-ajuste de MPC (~6.3K bytes de flash)
-  //#define MPC_EDIT_MENU                             // Agregar edición de MPC al menú "Configuración Avanzada". (~1.3K bytes de flash)
-  //#define MPC_AUTOTUNE_MENU                         // Agregar auto-ajuste de MPC al menú "Configuración Avanzada". (~350 bytes de flash)
+  //#define MPC_AUTOTUNE                              // Incluye un método para realizar el ajuste automático del MPC (~6.3K bytes de flash)
+  //#define MPC_EDIT_MENU                             // Añade la edición del MPC al menú "Configuración avanzada". (~1.3K bytes de flash)
+  //#define MPC_AUTOTUNE_MENU                         // Añade el ajuste automático del MPC al menú "Configuración avanzada". (~350 bytes de flash)
 
-  #define MPC_MAX 255                                 // (0..255) Corriente al cabezal mientras MPC está activo.
-  #define MPC_HEATER_POWER { 40.0f }                  // (W) Potencias de la resistencia calefactora.
+  #define MPC_MAX 255                                 // (0..255) Corriente al nozzle mientras el MPC está activo.
+  #define MPC_HEATER_POWER { 40.0f }                  // (W) Potencia de calentamiento del cartucho.
 
   #define MPC_INCLUDE_FAN                             // ¿Modelar la velocidad del ventilador?
 
-  // Constantes físicas medidas desde M306
-  #define MPC_BLOCK_HEAT_CAPACITY { 16.7f }           // (J/K) Capacidad térmica del bloque calefactor.
-  #define MPC_SENSOR_RESPONSIVENESS { 0.22f }         // (K/s por ∆K) Tasa de cambio de la temperatura del sensor desde el bloque calefactor.
-  #define MPC_AMBIENT_XFER_COEFF { 0.068f }           // (W/K) Coeficientes de transferencia de calor desde el bloque calefactor al aire ambiente con el ventilador apagado.
+  // Constantes físicas medidas con M306
+  #define MPC_BLOCK_HEAT_CAPACITY { 16.7f }           // (J/K) Capacidad térmica del bloque de calor.
+  #define MPC_SENSOR_RESPONSIVENESS { 0.22f }         // (K/s por ∆K) Tasa de cambio de la temperatura del sensor desde el bloque de calor.
+  #define MPC_AMBIENT_XFER_COEFF { 0.068f }           // (W/K) Coeficiente de transferencia de calor del bloque de calor al aire de la habitación sin ventilador encendido.
   #if ENABLED(MPC_INCLUDE_FAN)
-    #define MPC_AMBIENT_XFER_COEFF_FAN255 { 0.097f }  // (W/K) Coeficientes de transferencia de calor desde el bloque calefactor al aire ambiente con el ventilador a toda velocidad.
+    #define MPC_AMBIENT_XFER_COEFF_FAN255 { 0.097f }  // (W/K) Coeficiente de transferencia de calor del bloque de calor al aire de la habitación con ventilador encendido al máximo.
   #endif
 
-  // Para un ventilador y múltiples hotends, MPC necesita saber cómo aplicar el efecto de enfriamiento del ventilador.
+  // Para un ventilador y múltiples hotends, el MPC necesita saber cómo aplicar el efecto de enfriamiento del ventilador.
   #if ENABLED(MPC_INCLUDE_FAN)
     //#define MPC_FAN_0_ALL_HOTENDS
     //#define MPC_FAN_0_ACTIVE_HOTEND
   #endif
 
-  // Capacidad térmica del filamento (julios/kelvin/mm)
-  // Configurado en tiempo de ejecución con M306 H<valor>
   #define FILAMENT_HEAT_CAPACITY_PERMM { 5.6e-3f }    // 0.0056 J/K/mm para PLA de 1.75mm (0.0149 J/K/mm para PLA de 2.85mm).
-                                                      // 0.0036 J/K/mm para PETG de 1.75mm (0.0094 J/K/mm para PETG de 2.85mm).
-                                                      // 0.00515 J/K/mm para ABS de 1.75mm (0.0137 J/K/mm para ABS de 2.85mm).
-                                                      // 0.00522 J/K/mm para Nylon de 1.75mm (0.0138 J/K/mm para Nylon de 2.85mm).
+  //#define FILAMENT_HEAT_CAPACITY_PERMM { 3.6e-3f }  // 0.0036 J/K/mm para PETG de 1.75mm (0.0094 J/K/mm para PETG de 2.85mm).
 
   // Opciones avanzadas
-  #define MPC_SMOOTHING_FACTOR 0.5f                   // (0.0...1.0) Sensores de temperatura ruidosos pueden necesitar un valor más bajo para la estabilización.
-  #define MPC_MIN_AMBIENT_CHANGE 1.0f                 // (K/s) Tasa de cambio de temperatura ambiente modelada, al corregir inexactitudes del modelo.
-  #define MPC_STEADYSTATE 0.5f                        // (K/s) Tasa de cambio de temperatura para que la lógica de estado estable sea obligatoria.
+  #define MPC_SMOOTHING_FACTOR 0.5f                   // (0.0...1.0) Los sensores de temperatura ruidosos pueden necesitar un valor más bajo para la estabilización.
+  #define MPC_MIN_AMBIENT_CHANGE 1.0f                 // (K/s) Tasa de cambio de la temperatura ambiente del modelo, cuando se corrigen inexactitudes del modelo.
+  #define MPC_STEADYSTATE 0.5f                        // (K/s) Tasa de cambio de temperatura para hacer cumplir la lógica de estado estacionario.
 
-  #define MPC_TUNING_POS { X_CENTER, Y_CENTER, 1.0f } // (mm) Posición de autotune M306, idealmente centro de la cama en la altura de la primera capa.
-  #define MPC_TUNING_END_Z 10.0f                      // (mm) Posición final Z del autotune M306.
+  #define MPC_TUNING_POS { X_CENTER, Y_CENTER, 1.0f } // (mm) Posición de ajuste automático M306, idealmente centro de la cama a la altura de la primera capa.
+  #define MPC_TUNING_END_Z 10.0f                      // (mm) Posición final Z de ajuste automático M306.
 #endif
 
 //===========================================================================
-//=================== PID > Control de temperatura de la cama ===============
+//====================== PID > Control de temperatura de la cama ======================
 //===========================================================================
 
 // @section temperatura de la cama
@@ -785,9 +769,6 @@
 #else
   //#define BED_LIMIT_SWITCHING   // Mantiene la temperatura de la cama dentro de BED_HYSTERESIS del objetivo
 #endif
-
-// Agregar 'M190 R T' para un enfriamiento gradual de la cama con M190 R.
-//#define BED_ANNEALING_GCODE
 
 //===========================================================================
 //================ PID > Control de temperatura de la cámara ================
@@ -898,16 +879,8 @@
 //#define COREYX
 //#define COREZX
 //#define COREZY
-
-//
-// Cinemática MarkForged
-// Ver https://reprap.org/forum/read.php?152,504042
-//
-//#define MARKFORGED_XY
+//#define MARKFORGED_XY  // MarkForged. Ver https://reprap.org/forum/read.php?152,504042
 //#define MARKFORGED_YX
-#if ANY(MARKFORGED_XY, MARKFORGED_YX)
-  //#define MARKFORGED_INVERSE  // Habilitar para una ruta de correa de cinemática Markforged invertida
-#endif
 
 // Habilitar para una impresora de estilo de correa con movimiento "Z" infinito.
 //#define BELTPRINTER
@@ -991,6 +964,7 @@
  */
 //#define MORGAN_SCARA
 //#define MP_SCARA
+
 #if ANY(MORGAN_SCARA, MP_SCARA)
   // Si el movimiento es entrecortado, intenta reducir este valor
   #define DEFAULT_SEGMENTS_PER_SECOND 200
@@ -1267,21 +1241,15 @@
 
 /**
  * Aceleración predeterminada (cambio de velocidad con el tiempo) (lineal=mm/(s^2), rotacional=°/(s^2))
- * Sobrescribe con M204
+ * Anular con M204
  *
  *   M204 P    Aceleración
  *   M204 R    Aceleración de retracción
- *   M204 T    Aceleración de desplazamiento
- *   M204 I    Aceleración angular
- *   M204 J    Aceleración angular de desplazamiento
+ *   M204 T    Aceleración de movimiento
  */
-#define DEFAULT_ACCELERATION                  3000  // Aceleración X, Y, Z... y E para movimientos de impresión
-#define DEFAULT_RETRACT_ACCELERATION          3000  // Aceleración E para retracciones
-#define DEFAULT_TRAVEL_ACCELERATION           3000  // Aceleración X, Y, Z... para movimientos de desplazamiento (no impresión)
-#if ENABLED(AXIS4_ROTATES)
-  #define DEFAULT_ANGULAR_ACCELERATION        3000  // Aceleración I, J, K para movimientos de impresión solo rotacionales
-  #define DEFAULT_ANGULAR_TRAVEL_ACCELERATION 3000  // Aceleración I, J, K para movimientos de desplazamiento solo rotacionales (no impresión)
-#endif
+#define DEFAULT_ACCELERATION          3000    // Aceleración X, Y, Z y E para movimientos de impresión
+#define DEFAULT_RETRACT_ACCELERATION  3000    // Aceleración E para retracciones
+#define DEFAULT_TRAVEL_ACCELERATION   3000    // Aceleración X, Y, Z para movimientos de desplazamiento (no impresión)
 
 /**
  * Límites de jerk predeterminados (mm/s)
@@ -1438,18 +1406,6 @@
   #define TOUCH_MI_RETRACT_Z 0.5                  // Altura a la que se retrae la sonda
   //#define TOUCH_MI_DEPLOY_XPOS (X_MAX_BED + 2)  // Para un imán en el lado derecho de la cama
   //#define TOUCH_MI_MANUAL_DEPLOY                // Para despliegue manual (menú LCD)
-#endif
-
-/**
- * Sensor de Distancia a la Cama
- *
- * Mide la distancia desde la cama hasta la boquilla con una precisión de 0.01mm.
- * Para obtener información sobre este sensor: https://github.com/markniu/Bed_Distance_sensor
- * Utiliza el puerto I2C, por lo que requiere la biblioteca I2C markyue/Panda_SoftMasterI2C.
- */
-//#define BD_SENSOR
-#if ENABLED(BD_SENSOR)
-  //#define BD_SENSOR_PROBE_NO_STOP // Sondar la cama sin detenerse en cada punto de sonda
 #endif
 
 // Una sonda que se despliega y guarda con un pin solenoide (SOL1_PIN)
@@ -2049,6 +2005,7 @@
  * estas opciones para restaurar el estado de nivelado anterior o para habilitar siempre
  * el nivelado inmediatamente después de G28.
  */
+
 //#define RESTORE_LEVELING_AFTER_G28
 //#define ENABLE_LEVELING_AFTER_G28
 
@@ -2084,16 +2041,10 @@
     #define DEFAULT_LEVELING_FADE_HEIGHT 10.0 // (mm) Altura de desvanecimiento predeterminada.
   #endif
 
- /**
-   * Agregar desplazamiento Z (M424 Z) que se aplica a todos los movimientos a nivel del planificador.
-   * Este desplazamiento Z se establecerá automáticamente en el valor intermedio con G29.
-   */
-  //#define GLOBAL_MESH_Z_OFFSET
-
   /**
-   * Para máquinas cartesianas, en lugar de dividir movimientos en los límites de la malla,
-   * dividir los movimientos en segmentos cortos como en una Delta. Esto sigue los
-   * contornos de la cama más de cerca que los movimientos rectos de borde a borde.
+   * Para máquinas cartesianas, en lugar de dividir los movimientos en los límites de la malla,
+   * se dividen los movimientos en segmentos cortos como en una Delta. Esto sigue
+   * los contornos de la cama más de cerca que los movimientos rectos de borde a borde.
    */
   #define SEGMENT_LEVELED_MOVES
   #define LEVELED_SEGMENT_LENGTH 5.0 // (mm) Longitud de todos los segmentos (excepto el último)
@@ -2608,7 +2559,7 @@
  *
  * :{ 'en':'Inglés', 'an':'Aragonés', 'bg':'Búlgaro', 'ca':'Catalán', 'cz':'Checo', 'da':'Danés', 'de':'Alemán', 'el':'Griego (Grecia)', 'el_CY':'Griego (Chipre)', 'es':'Español', 'eu':'Vasco-Euskera', 'fi':'Finlandés', 'fr':'Francés', 'gl':'Gallego', 'hr':'Croata', 'hu':'Húngaro', 'it':'Italiano', 'jp_kana':'Japonés', 'ko_KR':'Coreano (Corea del Sur)', 'nl':'Holandés', 'pl':'Polaco', 'pt':'Portugués', 'pt_br':'Portugués (brasileño)', 'ro':'Rumano', 'ru':'Ruso', 'sk':'Eslovaco', 'sv':'Sueco', 'tr':'Turco', 'uk':'Ucraniano', 'vi':'Vietnamita', 'zh_CN':'Chino (Simplificado)', 'zh_TW':'Chino (Tradicional)'}
  */
-#define LCD_LANGUAGE en
+#define LCD_LANGUAGE es
 
 /**
  * Juego de caracteres del LCD
@@ -2632,7 +2583,7 @@
  *
  * :['JAPANESE', 'WESTERN', 'CYRILLIC']
  */
-#define DISPLAY_CHARSET_HD44780 JAPANESE
+#define DISPLAY_CHARSET_HD44780 WESTERN
 
 /**
  * Estilo de pantalla de información (0: Clásico, 1: Průša)
@@ -2859,8 +2810,7 @@
 // Pantallas LCD Sainsmart (YwRobot)
 //
 // Estas requieren la biblioteca LiquidCrystal_I2C de F.Malpartida
-//   https://github.com/MarlinFirmware/New-LiquidCrystal
-//   https://github.com/fmalpartida/New-LiquidCrystal/wiki
+// https://bitbucket.org/fmalpartida/new-liquidcrystal/wiki/Home
 //
 //#define LCD_SAINSMART_I2C_1602
 //#define LCD_SAINSMART_I2C_2004
@@ -3027,22 +2977,16 @@
 //#define FYSETC_GENERIC_12864_1_1 // Pantalla más grande con retroiluminación básica ON/OFF.
 
 //
-// BigTreeTech Mini 12864 V1.0 / V2.0 es un alias para FYSETC_MINI_12864_2_1. Tipo A/B. Retroiluminación NeoPixel RGB.
-// https://github.com/bigtreetech/MINI-12864
+// BigTreeTech Mini 12864 V1.0 es un alias de FYSETC_MINI_12864_2_1. Tipo A/B. Retroiluminación RGB NeoPixel.
 //
-//#define BTT_MINI_12864
-
-//
-// BEEZ MINI 12864 es un alias para FYSETC_MINI_12864_2_1. Tipo A/B. Retroiluminación NeoPixel RGB.
-//
-//#define BEEZ_MINI_12864
+//#define BTT_MINI_12864_V1
 
 //
 // Pantalla de fábrica para Creality CR-10
 // https://www.aliexpress.com/item/32833148327.html
 //
-// Conectar a EXP1 en placas RAMPS y compatibles.
-
+// Compatible con RAMPS utilizando un único conector de 10 pines.
+// (Para los propietarios de CR-10 que deseen reemplazar la placa Melzi de Creality pero conservar la pantalla)
 //
 //#define CR10_STOCKDISPLAY
 
@@ -3052,17 +2996,17 @@
 //#define ENDER2_STOCKDISPLAY
 
 //
-// Controlador gráfico completo ANET y Tronxy 128×64 utilizado en Anet A6
+// Controlador gráfico ANET y Tronxy
+//
+// LCD gráfico completo ANET 128x64 con codificador rotatorio como se utiliza en la Anet A6
+// Un clon de la pantalla gráfica completa de RepRapDiscount pero con
+// pines/cableado diferentes (ver pins_ANET_10.h). Habilitar una de estas opciones.
 //
 //#define ANET_FULL_GRAPHICS_LCD
+//#define ANET_FULL_GRAPHICS_LCD_ALT_WIRING
 
 //
-// Controlador gráfico completo GUCOCO CTC 128×64 utilizado en GUCOCO CTC A10S
-//
-//#define CTC_A10S_A13
-
-//
-// AZSMZ 12864 LCD con SD
+// LCD AZSMZ 12864 con SD
 // https://www.aliexpress.com/item/32837222770.html
 //
 //#define AZSMZ_12864
@@ -3176,9 +3120,6 @@
  *  - Descargar https://github.com/CrealityOfficial/Ender-3S1/archive/3S1_Plus_Screen.zip
  *  - Copiar la carpeta DWIN_SET descargada en la tarjeta SD.
  *
- * CREALITY_TOUCH
- *  - Pantalla táctil OEM CR-6. Una pantalla DWIN con capacidad táctil.
- *
  * Flashear una pantalla DGUS en Marlin:
  *  - Formatea la tarjeta SD en FAT32 con un tamaño de asignación de 4 KB.
  *  - Descarga los archivos según se especifique para tu tipo de pantalla.
@@ -3230,14 +3171,8 @@
 //#define NEXTION_TFT
 
 //
-// Controlador táctil PanelDue de Escher3D
-// http://escher3d.com/pages/order/products/product2.php
-//
-//#define PANELDUE
-
-//
-// Interfaces de controlador personalizadas de terceros o de proveedores.
-// Los recursos deben instalarse en 'src/lcd/extui'.
+// Interfaces de controlador de terceros o personalizadas por el proveedor.
+// Las fuentes deben instalarse en 'src/lcd/extui'.
 //
 //#define EXTENSIBLE_UI
 
@@ -3257,7 +3192,6 @@
 //
 // 480x320, 3.5", Pantalla SPI con codificador rotatorio de MKS
 // Generalmente emparejado con MKS Robin Nano V2 y V3
-// https://github.com/makerbase-mks/MKS-TFT-Hardware/tree/master/MKS%20TS35
 //
 //#define MKS_TS35_V2_0
 

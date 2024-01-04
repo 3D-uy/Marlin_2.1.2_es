@@ -564,8 +564,6 @@
 #define TEMP_SENSOR_AD8495_OFFSET 0.0
 #define TEMP_SENSOR_AD8495_GAIN   1.0
 
-// @section fans
-
 /**
  * Ventilador del controlador
  * Para enfriar los controladores de los motores paso a paso y los MOSFET.
@@ -578,22 +576,19 @@
   //#define CONTROLLER_FAN_PIN -1           // Establecer un pin personalizado para el ventilador del controlador
   //#define CONTROLLER_FAN2_PIN -1          // Establecer un pin personalizado para el segundo ventilador del controlador
   //#define CONTROLLER_FAN_USE_Z_ONLY       // Con esta opción, solo se considera el eje Z
-  //#define CONTROLLER_FAN_IGNORE_Z         // Ignorar el stepper Z. Útil cuando se desactiva el tiempo de espera del stepper.
-  #define CONTROLLERFAN_SPEED_MIN         0 // (0-255) Velocidad mínima. (Si se establece por debajo de este valor, el ventilador se apaga.)
-  #define CONTROLLERFAN_SPEED_ACTIVE    255 // (0-255) Velocidad activa, se usa cuando algún motor está habilitado
-  #define CONTROLLERFAN_SPEED_IDLE        0 // (0-255) Velocidad en reposo, se usa cuando los motores están deshabilitados
-  #define CONTROLLERFAN_IDLE_TIME        60 // (segundos) Tiempo adicional para mantener el ventilador en funcionamiento después de desactivar los motores
+  //#define CONTROLLER_FAN_IGNORE_Z         // Ignorar el motor del eje Z. Útil cuando se desactiva el tiempo de espera del motor paso a paso.
+  #define CONTROLLERFAN_SPEED_MIN         0 // (0-255) Velocidad mínima. (Si se establece por debajo de este valor, el ventilador se apaga).
+  #define CONTROLLERFAN_SPEED_ACTIVE    255 // (0-255) Velocidad activa, utilizada cuando se habilita cualquier motor
+  #define CONTROLLERFAN_SPEED_IDLE        0 // (0-255) Velocidad en reposo, utilizada cuando los motores están desactivados
+  #define CONTROLLERFAN_IDLE_TIME        60 // (segundos) Tiempo adicional para mantener el ventilador funcionando después de desactivar los motores
 
-  //#define CONTROLLERFAN_KICKSTART_TIME  100  // (ms)
-  //#define CONTROLLERFAN_KICKSTART_POWER 180  // 64-255
+  // Utilizar TEMP_SENSOR_BOARD como disparador para habilitar el ventilador del controlador
+  //#define CONTROLLER_FAN_MIN_BOARD_TEMP 40  // (°C) Encender el ventilador si la placa alcanza esta temperatura
 
-  // Usar TEMP_SENSOR_BOARD como un disparador para habilitar el ventilador del controlador
-  //#define CONTROLLER_FAN_MIN_BOARD_TEMP 40  // (°C) Enciende el ventilador si la placa alcanza esta temperatura
+  // Utilizar TEMP_SENSOR_SOC como disparador para habilitar el ventilador del controlador
+  //#define CONTROLLER_FAN_MIN_SOC_TEMP 40  // (°C) Encender el ventilador si el SoC alcanza esta temperatura
 
-  // Usar TEMP_SENSOR_SOC como un disparador para habilitar el ventilador del controlador
-  //#define CONTROLLER_FAN_MIN_SOC_TEMP 40  // (°C) Enciende el ventilador si el SoC alcanza esta temperatura
-
-  //#define CONTROLLER_FAN_EDITABLE         // Habilitar configuración configurable M710
+  //#define CONTROLLER_FAN_EDITABLE         // Habilitar la configuración configurable M710
   #if ENABLED(CONTROLLER_FAN_EDITABLE)
     #define CONTROLLER_FAN_MENU             // Habilitar el submenú del ventilador del controlador
   #endif
@@ -697,11 +692,8 @@
 #define CHAMBER_AUTO_FAN_PIN -1
 #define COOLER_AUTO_FAN_PIN -1
 
-#define EXTRUDER_AUTO_FAN_TEMPERATURE        50
-#define EXTRUDER_AUTO_FAN_SPEED             255  // 255 == máxima velocidad
-//#define EXTRUDER_AUTO_FAN_KICKSTART_TIME  100  // (ms)
-//#define EXTRUDER_AUTO_FAN_KICKSTART_POWER 180  // 64-255
-
+#define EXTRUDER_AUTO_FAN_TEMPERATURE 50
+#define EXTRUDER_AUTO_FAN_SPEED 255   // 255 == máxima velocidad
 #define CHAMBER_AUTO_FAN_TEMPERATURE 30
 #define CHAMBER_AUTO_FAN_SPEED 255
 #define COOLER_AUTO_FAN_TEMPERATURE 18
@@ -841,8 +833,6 @@
   //#define EVENT_GCODE_IDEX_AFTER_MODECHANGE "G28X"
 #endif
 
-// @section multi stepper
-
 /**
  * Multi-Stepper / Multi-Endstop
  *
@@ -913,8 +903,6 @@
 #if ENABLED(E_DUAL_STEPPER_DRIVERS)
   //#define INVERT_E1_VS_E0_DIR       // Las señales de dirección de E son opuestas
 #endif
-
-// @section extruder
 
 // Activa un solenoide en el extrusor activo con M380. Desactiva todos con M381.
 // Define SOL0_PIN, SOL1_PIN, etc., para cada extrusor que tenga un solenoide.
@@ -1119,69 +1107,49 @@
 // @section motion control
 
 /**
- * Control de Movimiento basado en Tiempo Fijo -- EXPERIMENTAL
+ * Control de movimiento basado en tiempo fijo -- EXPERIMENTAL
  * Habilitar/deshabilitar y establecer parámetros con el código G M493.
  */
 //#define FT_MOTION
 #if ENABLED(FT_MOTION)
-  #define FTM_DEFAULT_MODE        ftMotionMode_DISABLED // Modo predeterminado del control de tiempo fijo. (Enum en ft_types.h)
-  #define FTM_DEFAULT_DYNFREQ_MODE dynFreqMode_DISABLED // Modo predeterminado del cálculo dinámico de frecuencia. (Enum en ft_types.h)
-  #define FTM_SHAPING_DEFAULT_X_FREQ   37.0f      // (Hz) Frecuencia pico predeterminada utilizada por los modeladores de entrada para el eje X
-  #define FTM_SHAPING_DEFAULT_Y_FREQ   37.0f      // (Hz) Frecuencia pico predeterminada utilizada por los modeladores de entrada para el eje Y
-  #define FTM_LINEAR_ADV_DEFAULT_ENA   false      // Habilitar (true) o deshabilitar (false) el avance lineal predeterminado
-  #define FTM_LINEAR_ADV_DEFAULT_K      0.0f      // Ganancia de avance lineal predeterminada
-  #define FTM_SHAPING_ZETA_X            0.1f      // Zeta utilizado por los modeladores de entrada para el eje X
-  #define FTM_SHAPING_ZETA_Y            0.1f      // Zeta utilizado por los modeladores de entrada para el eje Y
-
-  #define FTM_SHAPING_V_TOL_X           0.05f     // Tolerancia de vibración utilizada por los modeladores de entrada EI para el eje X
-  #define FTM_SHAPING_V_TOL_Y           0.05f     // Tolerancia de vibración utilizada por los modeladores de entrada EI para el eje Y
-
-  //#define FT_MOTION_MENU                        // Proporcionar un menú MarlinUI para establecer los parámetros M493
+  #define FTM_DEFAULT_MODE        ftMotionMode_DISABLED // Modo predeterminado de control de tiempo fijo. (Enums en ft_types.h)
+  #define FTM_DEFAULT_DYNFREQ_MODE dynFreqMode_DISABLED // Modo predeterminado de cálculo de frecuencia dinámica. (Enums en ft_types.h)
+  #define FTM_SHAPING_DEFAULT_X_FREQ 37.0f              // (Hz) Frecuencia pico predeterminada utilizada por los modeladores de entrada.
+  #define FTM_SHAPING_DEFAULT_Y_FREQ 37.0f              // (Hz) Frecuencia pico predeterminada utilizada por los modeladores de entrada.
+  #define FTM_LINEAR_ADV_DEFAULT_ENA false              // Habilitar (true) o deshabilitar (false) avance lineal predeterminado.
+  #define FTM_LINEAR_ADV_DEFAULT_K    0.0f              // Ganancia de avance lineal predeterminada.
+  #define FTM_SHAPING_ZETA            0.1f              // Zeta utilizado por los modeladores de entrada.
+  #define FTM_SHAPING_V_TOL           0.05f             // Tolerancia de vibración utilizada por los modeladores de entrada EI.
 
   /**
    * Configuración avanzada
    */
-  #define FTM_UNIFIED_BWS                         // NO DESHABILITAR a menos que use Ulendo FBS (no implementado)
-  #if ENABLED(FTM_UNIFIED_BWS)
-    #define FTM_BW_SIZE               100         // Tamaño de ventana y lote unificado con una relación de 2
-  #else
-    #define FTM_WINDOW_SIZE           200         // Tamaño de ventana personalizado para la generación de trayectorias necesarias para Ulendo FBS
-    #define FTM_BATCH_SIZE            100         // Tamaño de lote personalizado para la generación de trayectorias necesarias para Ulendo FBS
-  #endif
-
-  #define FTM_FS                     1000         // (Hz) Frecuencia para la generación de trayectorias. (Recíproco de FTM_TS)
-  #define FTM_TS                        0.001f    // (s) Paso de tiempo para la generación de trayectorias. (Recíproco de FTM_FS)
-
+  #define FTM_BATCH_SIZE            100                 // Tamaño del lote para la generación de trayectorias;
+                                                        // la mitad del tamaño de ventana para Ulendo FBS.
+  #define FTM_FS                   1000                 // (Hz) Frecuencia para la generación de trayectorias. (1 / FTM_TS)
+  #define FTM_TS                      0.001f            // (s) Paso de tiempo para la generación de trayectorias. (1 / FTM_FS)
+  #define FTM_STEPPER_FS          20000                 // (Hz) Frecuencia para la actualización de E/S del motor paso a paso.
+  #define FTM_MIN_TICKS ((STEPPER_TIMER_RATE) / (FTM_STEPPER_FS)) // Ticks mínimos del motor paso a paso entre pasos.
+  #define FTM_MIN_SHAPE_FREQ         10                 // Frecuencia mínima de modelado.
+  #define FTM_ZMAX                  100                 // Retardos máximos para funciones de modelado (¡solo números pares!).
+                                                        // Calcular como:
+                                                        //    1/2 * (FTM_FS / FTM_MIN_SHAPE_FREQ) para ZV.
+                                                        //    (FTM_FS / FTM_MIN_SHAPE_FREQ) para ZVD, MZV.
+                                                        //    3/2 * (FTM_FS / FTM_MIN_SHAPE_FREQ) para 2HEI.
+                                                        //    2 * (FTM_FS / FTM_MIN_SHAPE_FREQ) para 3HEI.
+  #define FTM_STEPS_PER_UNIT_TIME    20                 // Comandos interpolados del motor paso a paso por unidad de tiempo.
+                                                        // Calcular como (FTM_STEPPER_FS / FTM_FS).
+  #define FTM_CTS_COMPARE_VAL        10                 // Valor de comparación utilizado en el algoritmo de interpolación.
+                                                        // Calcular como (FTM_STEPS_PER_UNIT_TIME / 2).
   // Estos valores se pueden configurar para ajustar la duración de loop().
-  #define FTM_STEPS_PER_LOOP           60         // Número de comandos de paso a generar en cada loop()
-  #define FTM_POINTS_PER_LOOP         100         // Número de puntos de trayectoria a generar en cada loop()
+  #define FTM_STEPS_PER_LOOP         60                 // Número de comandos del motor paso a paso que se generan en cada loop().
+  #define FTM_POINTS_PER_LOOP       100                 // Número de puntos de trayectoria que se generan en cada loop().
 
-  #if DISABLED(COREXY)
-    #define FTM_STEPPER_FS          20000         // (Hz) Frecuencia para la actualización de E/S del stepper
+  // Este valor se puede configurar para ajustar la duración de consumo del búfer de comandos.
+  // Si el movimiento del motor paso a paso no es fluido, intente aumentar este valor.
+  #define FTM_STEPPERCMD_BUFF_SIZE 1000                 // Tamaño de los búferes de comandos del motor paso a paso.
 
-    // Use esto para ajustar el tiempo necesario para consumir el búfer de comandos.
-    // Intente aumentar este valor si el movimiento del stepper es entrecortado.
-    #define FTM_STEPPERCMD_BUFF_SIZE 3000         // Tamaño de los búferes de comandos de stepper
-                                                  // (FTM_STEPS_PER_LOOP * FTM_POINTS_PER_LOOP) es un buen punto de partida
-                                                  // Si se queda sin memoria, vuelva a 3000 e incremente progresivamente
-  #else
-    // La operación de movimiento CoreXY necesita un tamaño de búfer más grande. Estos valores se basan en nuestras pruebas.
-    #define FTM_STEPPER_FS          30000
-    #define FTM_STEPPERCMD_BUFF_SIZE 6000
-  #endif
-
-  #define FTM_STEPS_PER_UNIT_TIME (FTM_STEPPER_FS / FTM_FS)       // Comandos de paso interpolados por unidad de tiempo
-  #define FTM_CTS_COMPARE_VAL (FTM_STEPS_PER_UNIT_TIME / 2)       // Valor de comparación utilizado en el algoritmo de interpolación
-  #define FTM_MIN_TICKS ((STEPPER_TIMER_RATE) / (FTM_STEPPER_FS)) // Ticks mínimos del stepper entre pasos
-
-  #define FTM_MIN_SHAPE_FREQ           10         // Frecuencia mínima de modelado
-  #define FTM_RATIO (FTM_FS / FTM_MIN_SHAPE_FREQ) // Factor para usar en FTM_ZMAX. NO CAMBIE.
-  #define FTM_ZMAX (FTM_RATIO * 2)                // Retardos máximos para funciones de modelado (solo números pares!)
-                                                  // Calcule como:
-                                                  //   ZV       : FTM_RATIO / 2
-                                                  //   ZVD, MZV : FTM_RATIO
-                                                  //   2HEI     : FTM_RATIO * 3 / 2
-                                                  //   3HEI     : FTM_RATIO * 2
+  //#define FT_MOTION_MENU                              // Proporcionar un menú MarlinUI para establecer los parámetros de M493.
 #endif
 
 /**
@@ -1257,15 +1225,11 @@
 //#define DISABLE_IDLE_W
 #define DISABLE_IDLE_E    // Apagar todos los extrusores inactivos
 
-// Velocidades de avance mínimas predeterminadas para movimientos de impresión y de desplazamiento
-#define DEFAULT_MINIMUMFEEDRATE             0.0     // (mm/s) Velocidad de avance mínima. Establecer con M205 S.
-#define DEFAULT_MINTRAVELFEEDRATE           0.0     // (mm/s) Velocidad de avance mínima de desplazamiento. Establecer con M205 T.
-#if HAS_ROTATIONAL_AXES
-  #define DEFAULT_ANGULAR_MINIMUMFEEDRATE   0.0     // (°/s) Velocidad de avance mínima para movimientos solo rotacionales. Establecer con M205 P.
-  #define DEFAULT_ANGULAR_MINTRAVELFEEDRATE 0.0     // (°/s) Velocidad de avance mínima de desplazamiento para movimientos solo rotacionales. Establecer con M205 Q.
-#endif
+// Velocidades de alimentación mínimas predeterminadas para movimientos de impresión y de desplazamiento
+#define DEFAULT_MINIMUMFEEDRATE       0.0     // (mm/s. °/s para movimientos solo de rotación) Velocidad de alimentación mínima. Establecer con M205 S.
+#define DEFAULT_MINTRAVELFEEDRATE     0.0     // (mm/s. °/s para movimientos solo de rotación) Velocidad de alimentación mínima de desplazamiento. Establecer con M205 T.
 
-// Tiempo mínimo que un segmento debe tomar a medida que se vacía el búfer
+// Tiempo mínimo que un segmento necesita tomar a medida que el búfer se vacía
 #define DEFAULT_MINSEGMENTTIME        20000   // (µs) Establecer con M205 B.
 
 // Reducir la velocidad de la máquina si el búfer de anticipación está medio lleno (por defecto).
@@ -1499,6 +1463,11 @@
   #define FEEDRATE_CHANGE_BEEP_DURATION   10
   #define FEEDRATE_CHANGE_BEEP_FREQUENCY 440
 #endif
+
+//
+// Tiempo de espera de retroiluminación LCD
+//
+//#define LCD_BACKLIGHT_TIMEOUT_MINS 1  // (minutos) Tiempo de espera antes de apagar la retroiluminación
 
 #if HAS_BED_PROBE && ANY(HAS_MARLINUI_MENU, HAS_TFT_LVGL_UI)
   //#define PROBE_OFFSET_WIZARD       // Agrega una opción de calibración de compensación Z de la sonda al menú LCD
@@ -1946,15 +1915,6 @@
 //#define NO_SD_HOST_DRIVE   // Desactiva el acceso a la tarjeta SD a través de USB (por seguridad).
 
 /**
- * De forma predeterminada, el framework es responsable de la E/S de medios compartidos.
- * Habilitar esto si necesita que Marlin se encargue de la E/S de medios compartidos.
- * Útil si la E/S de medios compartidos no funciona correctamente en algunas placas.
- */
-#if HAS_MEDIA && DISABLED(NO_SD_HOST_DRIVE)
-  //#define DISKIO_HOST_DRIVE
-#endif
-
-/**
  * Opciones adicionales para pantallas gráficas
  *
  * Utiliza las optimizaciones aquí para mejorar el rendimiento de impresión,
@@ -2273,7 +2233,7 @@
 // @section lcd
 
 /**
- * Babystepping permite el movimiento de los ejes en incrementos pequeños sin cambiar
+ * El babystepping permite mover los ejes en incrementos pequeños sin cambiar
  * los valores de posición actuales. Esta función se utiliza principalmente para ajustar el eje Z
  * en la primera capa de una impresión en tiempo real.
  *
@@ -2281,35 +2241,32 @@
  */
 //#define BABYSTEPPING
 #if ENABLED(BABYSTEPPING)
+  //#define INTEGRATED_BABYSTEPPING         // Integración del babystepping en el ISR del motor paso a paso
   //#define EP_BABYSTEPPING                 // Babystepping M293/M294 con soporte EMERGENCY_PARSER
   //#define BABYSTEP_WITHOUT_HOMING
   //#define BABYSTEP_ALWAYS_AVAILABLE       // Permitir babystepping en todo momento (no solo durante el movimiento)
-  //#define BABYSTEP_XY                     // También habilitar Babystepping en X/Y. ¡No compatible con DELTA!
-  //#define BABYSTEP_INVERT_Z               // Habilitar si los babysteps de Z deben ir en la dirección opuesta
+  //#define BABYSTEP_XY                     // Habilitar también el babystepping X/Y. ¡No es compatible en DELTA!
+  //#define BABYSTEP_INVERT_Z               // Habilitar si los pasos de Z deben ir en la dirección opuesta
   //#define BABYSTEP_MILLIMETER_UNITS       // Especificar BABYSTEP_MULTIPLICATOR_(XY|Z) en mm en lugar de micro-pasos
-  #define BABYSTEP_MULTIPLICATOR_Z  1       // (pasos o mm) Pasos o distancia en milímetros para cada babystep de Z
-  #define BABYSTEP_MULTIPLICATOR_XY 1       // (pasos o mm) Pasos o distancia en milímetros para cada babystep de XY
+  #define BABYSTEP_MULTIPLICATOR_Z  1       // (pasos o mm) Pasos o distancia en milímetros para cada paso de Z
+  #define BABYSTEP_MULTIPLICATOR_XY 1       // (pasos o mm) Pasos o distancia en milímetros para cada paso de XY
 
-  //#define DOUBLECLICK_FOR_Z_BABYSTEPPING  // Doble clic en la pantalla de estado para Babystepping de Z.
+  //#define DOUBLECLICK_FOR_Z_BABYSTEPPING  // Doble clic en la pantalla de estado para el babystepping de Z.
   #if ENABLED(DOUBLECLICK_FOR_Z_BABYSTEPPING)
     #define DOUBLECLICK_MAX_INTERVAL 1250   // Intervalo máximo entre clics, en milisegundos.
                                             // Nota: Se puede agregar tiempo adicional para mitigar la latencia del controlador.
-    //#define MOVE_Z_WHEN_IDLE              // Saltar al menú de mover Z con doble clic cuando la impresora esté inactiva.
+    //#define MOVE_Z_WHEN_IDLE              // Ir al menú de movimiento de Z al hacer doble clic cuando la impresora esté inactiva.
     #if ENABLED(MOVE_Z_WHEN_IDLE)
-      #define MOVE_Z_IDLE_MULTIPLICATOR 1   // Multiplicar 1mm por este factor para el tamaño del paso de movimiento.
+      #define MOVE_Z_IDLE_MULTIPLICATOR 1   // Multiplicar 1 mm por este factor para el tamaño del paso de movimiento.
     #endif
   #endif
 
   //#define BABYSTEP_DISPLAY_TOTAL          // Mostrar el total de babysteps desde el último G28
 
-  //#define BABYSTEP_ZPROBE_OFFSET          // Combinar M851 Z y Babystepping
-  //#define BABYSTEP_GLOBAL_Z               // Combinar M424 Z y Babystepping
-
-  #if ANY(BABYSTEP_ZPROBE_OFFSET, BABYSTEP_GLOBAL_Z)
-    #if ENABLED(BABYSTEP_ZPROBE_OFFSET)
-      //#define BABYSTEP_HOTEND_Z_OFFSET    // Para múltiples hotends, babystep de compensación relativa de Z
-    #endif
-    //#define BABYSTEP_GFX_OVERLAY          // Habilitar superposición gráfica en el editor de compensación de Z
+  //#define BABYSTEP_ZPROBE_OFFSET          // Combinar M851 Z y babystepping
+  #if ENABLED(BABYSTEP_ZPROBE_OFFSET)
+    //#define BABYSTEP_HOTEND_Z_OFFSET      // Para múltiples hotends, desplazamientos Z relativos del babystepping
+    //#define BABYSTEP_GFX_OVERLAY          // Habilitar superposición gráfica en el editor de desplazamiento Z
   #endif
 #endif
 
@@ -2943,7 +2900,6 @@
 
   //#define FILAMENT_LOAD_UNLOAD_GCODES           // Agregar códigos G M701/M702 para cargar/descargar, además de cargar/descargar en el menú LCD Prepare.
   //#define FILAMENT_UNLOAD_ALL_EXTRUDERS         // Permitir que M702 descargue todos los extrusores por encima de una temperatura objetivo mínima (establecida por M302)
-  #define CONFIGURE_FILAMENT_CHANGE               // Agregar M603 G-code y elementos de menú. Requiere ~1.3K bytes de memoria flash.
 #endif
 
 // @section tmc_smart
@@ -3851,14 +3807,6 @@
  */
 //#define CNC_COORDINATE_SYSTEMS
 
-/**
- * Ciclo de taladrado CNC - EN DESARROLLO
- *
- * Habilita G81 para realizar un ciclo de taladrado.
- * Actualmente solo admite un solo ciclo, sin encadenamiento de G-code.
- */
-//#define CNC_DRILLING_CYCLE
-
 // @section reporte
 
 /**
@@ -3960,18 +3908,6 @@
 //#define REPETIER_GCODE_M360     // Agregar comandos originalmente de Repetier FW
 
 /**
- * Habilitar banderas de depuración M111 1=ECHO, 2=INFO, 4=ERRORS (no implementado).
- * Deshabilitar para ahorrar algo de memoria flash. Algunos hosts (Repetier Host) pueden depender de esta característica.
- */
-#define DEBUG_FLAGS_GCODE
-
-/**
- * M115 - Informar capacidades. Deshabilitar para ahorrar ~1150 bytes de memoria flash.
- *        Algunos hosts (y pantallas TFT seriales) dependen de esta característica.
- */
-#define REPORT_CAPABILITIES_GCODE
-
-/**
  * Habilita esta opción para una compilación más liviana de Marlin que elimina todos
  * los desplazamientos del espacio de trabajo, simplificando las transformaciones de coordenadas, nivelación, etc.
  *  - G92 volverá a su comportamiento de Marlin 1.0.
@@ -3997,7 +3933,6 @@
 #ifdef G0_FEEDRATE
   //#define VARIABLE_G0_FEEDRATE // La velocidad de avance (feedrate) G0 se establece mediante F en el modo de movimiento G0
 #endif
-//#define G0_ANGULAR_FEEDRATE 2700 // (°/min)
 
 // @section gcode
 
@@ -4332,7 +4267,6 @@
                                           // Por defecto, se realiza un perfilado de "idle()", por lo que muestra cuán "inactivo" está el procesador.
                                           // Ver clase CodeProfiler.
   //#define MAX7219_DEBUG_MULTISTEPPING 6 // Mostrar el multi-stepping del 1 al 128 en esta fila de la matriz de LED.
-  //#define MAX7219_DEBUG_SLOWDOWN      6 // Contar (módulo 16) cuántas veces SLOWDOWN ha reducido la velocidad de impresión.
 #endif
 
 /**
